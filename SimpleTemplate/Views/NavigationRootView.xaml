@@ -56,14 +56,16 @@
 
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem x:Name="NavigationItem_Home"
-                                       Content="Home">
+                                       Content="Home"
+                                       Tag="{x:Type vm:HomePageViewModel}">
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Home}"/>
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
                 <ui:NavigationViewItem x:Name="NavigationItem_Apps"
-                                       Content="Apps">
+                                       Content="Apps"
+                                       Tag="{x:Type vm:AppsPageViewModel}">
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.OEM}"/>
                     </ui:NavigationViewItem.Icon>

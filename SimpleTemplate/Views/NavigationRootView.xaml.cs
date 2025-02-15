@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleTemplate.Services;
 using SimpleTemplate.ViewModels;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
@@ -14,26 +15,17 @@ namespace SimpleTemplate.Views
     {
         public NavigationRootView()
         {
-
             InitializeComponent();
             DataContext = App.Current.Services.GetService<NavigationRootViewModel>();
+            _navigationService.ConfigureNavigation(NavigationItem_Home, typeof(HomePageViewModel), "Home");
+            _navigationService.ConfigureNavigation(NavigationItem_Apps, typeof(AppsPageViewModel), "Apps");
         }
+
+        private readonly NavigationService _navigationService = new();
+
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            var item = sender.SelectedItem;
-            ObservableRecipient? page = null;
-
-            if (item == NavigationItem_Home)
-            {
-                Frame_Main.Navigate(new HomePageView());
-                NavigationViewControl.Header = "Home";
-            }
-
-            else if (item == NavigationItem_Apps)
-            {
-                Frame_Main.Navigate(new AppsPageView());
-                NavigationViewControl.Header = "Apps";
-            }
+            _navigationService.TryNavigate(sender.SelectedItem, Frame_Main, NavigationViewControl);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

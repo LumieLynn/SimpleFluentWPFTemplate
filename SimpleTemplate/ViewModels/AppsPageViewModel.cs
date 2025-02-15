@@ -19,7 +19,7 @@ namespace SimpleTemplate.ViewModels
             for (int i = 0; i < 256; i++)
             {
                 var random = new Random();
-                _buttonSource.Add(
+                ButtonSource.Add(
                     new SolidColorBrush(
                         Color.FromArgb(
                             (byte)200,
