@@ -1,7 +1,7 @@
 ﻿using System.Windows;
+using System.Windows.Navigation;
 using Microsoft.Extensions.DependencyInjection;
-using SimpleTemplate.ViewModels;
-using SimpleTemplate.Views;
+using SimpleTemplate.Infrastructure;
 
 namespace SimpleTemplate
 {
@@ -19,26 +19,18 @@ namespace SimpleTemplate
 
         private static IServiceProvider ConfigureServices()
         {
-            var services = new ServiceCollection();
-
-            services.AddSingleton<MainWindow>();
-
-            services.AddSingleton<NavigationRootView>();
-            services.AddSingleton<NavigationRootViewModel>();
-
-            services.AddSingleton<HomePageView>();
-            services.AddSingleton<HomePageViewModel>();
-
-            services.AddSingleton<AppsPageView>();
-            services.AddSingleton<AppsPageViewModel>();
-
-            return services.BuildServiceProvider();
+            return new ServiceCollection()
+                .AddViews()
+                .AddViewModels()
+                .AddSingleton<MainWindow>()
+                .AddSingleton<NavigationService>()
+                .BuildServiceProvider();
         }
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            MainWindow = Services.GetRequiredService<MainWindow>();
-            MainWindow.Show();
+            var mainWindow = Services.GetRequiredService<MainWindow>();
+            mainWindow.Show();
         }
     }
 

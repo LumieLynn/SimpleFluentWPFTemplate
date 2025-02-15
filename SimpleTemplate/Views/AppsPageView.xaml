@@ -1,4 +1,4 @@
-﻿<Page x:Class="SimpleTemplate.Views.AppsPageView"
+﻿<ui:Page x:Class="SimpleTemplate.Views.AppsPageView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -29,4 +29,4 @@
             </ItemsControl.ItemsPanel>
         </ItemsControl>
     </Grid>
-</Page>
+</ui:Page>

@@ -1,6 +1,6 @@
-﻿using System.Windows.Controls;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.ViewModels;
+using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace SimpleTemplate.Views
 {

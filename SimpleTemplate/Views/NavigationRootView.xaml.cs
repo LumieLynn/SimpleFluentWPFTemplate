@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using CommunityToolkit.Mvvm.ComponentModel;
 using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Services;

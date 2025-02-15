@@ -1,4 +1,5 @@
 ﻿using iNKORE.UI.WPF.Modern.Controls;
+using SimpleTemplate.Views.ProxyPage;
 using Frame = iNKORE.UI.WPF.Modern.Controls.Frame;
 
 namespace SimpleTemplate.Services
@@ -17,7 +18,7 @@ namespace SimpleTemplate.Services
             if (_navigationMap.TryGetValue(menuItem, out var config))
             {
                 var viewModel = Activator.CreateInstance(config.ViewModelType);
-                frame.Navigate(viewModel);
+                frame.Navigate(new NavigationProxyPage { ViewModel = viewModel });
                 navigationView.Header = config.Title;
                 return true;
             }
