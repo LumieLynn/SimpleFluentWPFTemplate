@@ -8,7 +8,6 @@
          xmlns:vm="clr-namespace:SimpleTemplate.ViewModels"
          mc:Ignorable="d" 
          d:DesignHeight="450" d:DesignWidth="800"
-         Loaded="Page_Loaded"
          ui:Title="NavigationRootView">
 
     <Grid>
@@ -45,6 +44,7 @@
             PaneTitle="{Binding PaneTitle}"
             IsTabStop="False"
             SelectedItem="{Binding Selected, Mode=OneWay}"
+            MenuItemsSource="{Binding MenuItems}"
             IsTitleBarAutoPaddingEnabled="False"
             SelectionChanged="NavigationView_SelectionChanged"
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
@@ -54,23 +54,17 @@
                 <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
             </FrameworkElement.Resources>
 
-            <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem x:Name="NavigationItem_Home"
-                                       Content="Home"
-                                       Tag="{x:Type vm:HomePageViewModel}">
-                    <ui:NavigationViewItem.Icon>
-                        <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Home}"/>
-                    </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
-
-                <ui:NavigationViewItem x:Name="NavigationItem_Apps"
-                                       Content="Apps"
-                                       Tag="{x:Type vm:AppsPageViewModel}">
-                    <ui:NavigationViewItem.Icon>
-                        <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.OEM}"/>
-                    </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
-            </ui:NavigationView.MenuItems>
+            <ui:NavigationView.MenuItemTemplate>
+                <DataTemplate>
+                    <ui:NavigationViewItem
+                        Content="{Binding Title}"
+                        Tag="{Binding TargetViewModelType}">
+                        <ui:NavigationViewItem.Icon>
+                            <ContentControl Content="{Binding Icon}"/>
+                        </ui:NavigationViewItem.Icon>
+                    </ui:NavigationViewItem>
+                </DataTemplate>
+            </ui:NavigationView.MenuItemTemplate>
 
             <ui:ScrollViewerEx
                 Margin="0,25,0,0">

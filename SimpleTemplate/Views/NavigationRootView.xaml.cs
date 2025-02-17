@@ -12,13 +12,12 @@ namespace SimpleTemplate.Views
     /// </summary>
     public partial class NavigationRootView : Page
     {
-        public NavigationRootView(NavigationService navigationService)
+        public NavigationRootView(NavigationService navigationService, NavigationRootViewModel viewModel)
         {
             InitializeComponent();
             _navigationService = navigationService;
-            DataContext = App.Current.Services.GetService<NavigationRootViewModel>();
-            _navigationService.ConfigureNavigation(NavigationItem_Home, typeof(HomePageViewModel), "Home");
-            _navigationService.ConfigureNavigation(NavigationItem_Apps, typeof(AppsPageViewModel), "Apps");
+            DataContext = viewModel;
+            navigationService.ConfigureNavigation(viewModel.MenuItems);
         }
 
         private readonly NavigationService _navigationService;
@@ -26,11 +25,6 @@ namespace SimpleTemplate.Views
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             _navigationService.TryNavigate(sender.SelectedItem, Frame_Main, NavigationViewControl);
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            NavigationViewControl.SelectedItem = NavigationItem_Home;
         }
 
         private void NavigationViewControl_DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)

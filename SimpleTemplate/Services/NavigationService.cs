@@ -1,6 +1,7 @@
 ﻿using System.Windows.Navigation;
 using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleTemplate.Models;
 using SimpleTemplate.Views.ProxyPage;
 using Frame = iNKORE.UI.WPF.Modern.Controls.Frame;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
@@ -17,9 +18,12 @@ namespace SimpleTemplate.Services
             _serviceProvider = serviceProvider;
         }
 
-        public void ConfigureNavigation(object menuItem, Type viewModelType, string title)
+        public void ConfigureNavigation(IEnumerable<NavigationItem> items)
         {
-            _navigationMap[menuItem] = (viewModelType, title);
+            foreach (var item in items)
+            {
+                _navigationMap[item] = (item.TargetViewModelType, item.Title);
+            }
         }
 
         public bool TryNavigate(object menuItem, Frame frame, NavigationView navigationView)
