@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Navigation;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace SimpleTemplate.Views.ProxyPage
@@ -20,6 +21,15 @@ namespace SimpleTemplate.Views.ProxyPage
         public NavigationProxyPage()
         {
             InitializeComponent();
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            if (DataContext is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+            base.OnNavigatedFrom(e);
         }
     }
 }

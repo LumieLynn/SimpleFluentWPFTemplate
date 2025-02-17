@@ -1,7 +1,10 @@
 ﻿using System.Windows;
-using System.Windows.Navigation;
+using SimpleTemplate.Services;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Infrastructure;
+using SimpleTemplate.ViewModels;
+using SimpleTemplate.Views;
+using SimpleTemplate.Views.ProxyPage;
 
 namespace SimpleTemplate
 {
@@ -20,10 +23,11 @@ namespace SimpleTemplate
         private static IServiceProvider ConfigureServices()
         {
             return new ServiceCollection()
-                .AddViews()
+                .AddSingleton<NavigationService>()
+                .AddSingleton<NavigationRootView>()
+                .AddTransient<NavigationProxyPage>()
                 .AddViewModels()
                 .AddSingleton<MainWindow>()
-                .AddSingleton<NavigationService>()
                 .BuildServiceProvider();
         }
         protected override async void OnStartup(StartupEventArgs e)

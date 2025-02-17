@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Views;
 
 namespace SimpleTemplate
@@ -25,7 +26,7 @@ namespace SimpleTemplate
         {
             _initializationCts = new CancellationTokenSource();
             await Task.Delay(2000, _initializationCts.Token);
-            Content = new NavigationRootView();
+            Content = App.Current.Services.GetRequiredService<NavigationRootView>();
         }
 
         protected override void OnClosed(EventArgs e)

@@ -12,15 +12,16 @@ namespace SimpleTemplate.Views
     /// </summary>
     public partial class NavigationRootView : Page
     {
-        public NavigationRootView()
+        public NavigationRootView(NavigationService navigationService)
         {
             InitializeComponent();
+            _navigationService = navigationService;
             DataContext = App.Current.Services.GetService<NavigationRootViewModel>();
             _navigationService.ConfigureNavigation(NavigationItem_Home, typeof(HomePageViewModel), "Home");
             _navigationService.ConfigureNavigation(NavigationItem_Apps, typeof(AppsPageViewModel), "Apps");
         }
 
-        private readonly NavigationService _navigationService = new();
+        private readonly NavigationService _navigationService;
 
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
