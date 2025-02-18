@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\AutoTemplateService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Assets\WpfLibrary_256w.png" />
     <None Remove="Assets\WpfLibrary_Minimal_64w.png" />
   </ItemGroup>

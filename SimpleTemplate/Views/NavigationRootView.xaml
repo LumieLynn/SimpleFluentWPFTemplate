@@ -69,17 +69,7 @@
             <ui:ScrollViewerEx
                 Margin="0,25,0,0">
                 <ui:Frame x:Name="Frame_Main"
-                          Margin="57,0,57,0">
-                    <ui:Frame.Resources>
-                        <DataTemplate DataType="{x:Type vm:HomePageViewModel}">
-                            <local:HomePageView />
-                        </DataTemplate>
-
-                        <DataTemplate DataType="{x:Type vm:AppsPageViewModel}">
-                            <local:AppsPageView />
-                        </DataTemplate>
-                    </ui:Frame.Resources>
-                </ui:Frame>
+                          Margin="57,0,57,0" />
             </ui:ScrollViewerEx>
         </ui:NavigationView>
     </Grid>

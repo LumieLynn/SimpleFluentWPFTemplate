@@ -1,6 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows.Controls;
-using System.Windows.Controls.Ribbon.Primitives;
 using CommunityToolkit.Mvvm.ComponentModel;
 using iNKORE.UI.WPF.Modern.Common.IconKeys;
 using iNKORE.UI.WPF.Modern.Controls;
@@ -35,11 +33,11 @@ namespace SimpleTemplate.ViewModels
         {
             MenuItems.Add(new NavigationItem(
                 "Home",
-                new FontIcon{ Icon = SegoeFluentIcons.Home },
+                new FontIcon { Icon = SegoeFluentIcons.Home },
                 typeof(HomePageViewModel)));
             MenuItems.Add(new NavigationItem(
                 "Apps",
-                new FontIcon{ Icon = SegoeFluentIcons.OEM },
+                new FontIcon { Icon = SegoeFluentIcons.OEM },
                 typeof(AppsPageViewModel)));
 
         }

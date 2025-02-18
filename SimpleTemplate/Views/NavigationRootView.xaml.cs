@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using iNKORE.UI.WPF.Modern.Controls;
-using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Services;
 using SimpleTemplate.ViewModels;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;

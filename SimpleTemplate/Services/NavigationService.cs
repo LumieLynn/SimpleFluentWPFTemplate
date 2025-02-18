@@ -1,5 +1,4 @@
-﻿using System.Windows.Navigation;
-using iNKORE.UI.WPF.Modern.Controls;
+﻿using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Models;
 using SimpleTemplate.Views.ProxyPage;

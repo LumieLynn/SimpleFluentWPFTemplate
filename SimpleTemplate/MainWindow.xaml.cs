@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Views;
 
@@ -19,13 +20,21 @@ namespace SimpleTemplate
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            await InitializeAppAsync();
+            try
+            {
+                await InitializeAppAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Initialize Failed:{ex.Message}");
+            }
         }
 
         private async Task InitializeAppAsync()
         {
             _initializationCts = new CancellationTokenSource();
-            await Task.Delay(2000, _initializationCts.Token);
+            await Task.Delay(2000, _initializationCts.Token)
+                .ConfigureAwait(true);
             Content = App.Current.Services.GetRequiredService<NavigationRootView>();
         }
 
