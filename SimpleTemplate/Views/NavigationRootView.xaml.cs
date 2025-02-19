@@ -16,6 +16,7 @@ namespace SimpleTemplate.Views
             InitializeComponent();
             _navigationService = navigationService;
             DataContext = viewModel;
+            _navigationService.SetProperties(Frame_Main, NavigationViewControl);
             navigationService.ConfigureNavigation(viewModel.MenuItems);
         }
 
@@ -23,7 +24,7 @@ namespace SimpleTemplate.Views
 
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            _navigationService.TryNavigate(sender.SelectedItem, Frame_Main, NavigationViewControl);
+            _navigationService.TryNavigate(sender.SelectedItem);
         }
 
         private void NavigationViewControl_DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)

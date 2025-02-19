@@ -8,5 +8,5 @@
          mc:Ignorable="d" 
          d:DesignHeight="450" d:DesignWidth="800"
          Title="NavigationProxyPage">
-    <ui:Frame Content="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=Page}}"/>
+    <ui:Frame Name="SubFrame" Content="{Binding ViewModel, RelativeSource={RelativeSource AncestorType=Page}}"/>
 </ui:Page>

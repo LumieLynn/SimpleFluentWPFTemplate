@@ -1,4 +1,6 @@
-﻿using iNKORE.UI.WPF.Modern.Controls;
+﻿using System.Reflection;
+using System.Windows.Navigation;
+using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Models;
 using SimpleTemplate.Views.ProxyPage;
@@ -11,7 +13,67 @@ namespace SimpleTemplate.Services
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly Dictionary<object, (Type ViewModelType, string Title)> _navigationMap = new();
+        private readonly Dictionary<Type, object> _selectionMap = new();
         private readonly Dictionary<Type, WeakReference<Page>> _pageCache = new();
+        private Frame _frame;
+        private NavigationView _navView;
+
+        public void SetProperties(Frame frame, NavigationView navigationView)
+        {
+            _frame = frame;
+            _frame.Navigated += (s, e) =>
+            {
+                UpdateBackButton();
+            };
+            _navView = navigationView;
+
+            _navView.BackRequested += NavView_BackRequested;
+        }
+
+        private void NavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
+        {
+            TryGoBack();
+        }
+
+        private bool TryGoBack()
+        {
+            if (_navView.IsPaneOpen && (_navView.DisplayMode == NavigationViewDisplayMode.Compact || _navView.DisplayMode == NavigationViewDisplayMode.Minimal))
+            {
+                return false;
+            }
+
+            bool navigated = false;
+            if (_frame.CanGoBack)
+            {
+                _frame.Navigated += OnNavigatedBack;
+                _frame.GoBack();
+                navigated = true;
+            }
+
+            return navigated;
+        }
+
+        private void OnNavigatedBack(object sender, NavigationEventArgs e)
+        {
+            _frame.Navigated -= OnNavigatedBack;
+
+            NavigationProxyPage currentPage = (NavigationProxyPage)_frame.Content;
+            var PageTypeName = currentPage.SendViewModelName();
+            var assembly = Assembly.GetExecutingAssembly();
+            var viewModelType = assembly.GetType(PageTypeName);
+
+            if (currentPage != null && viewModelType != null)
+            {
+                _navView.SelectedItem = _selectionMap[viewModelType];
+
+            }
+        }
+
+        private void UpdateBackButton()
+        {
+            _navView.IsBackEnabled = _frame.CanGoBack ? true : false;
+        }
+
         public NavigationService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
@@ -22,16 +84,17 @@ namespace SimpleTemplate.Services
             foreach (var item in items)
             {
                 _navigationMap[item] = (item.TargetViewModelType, item.Title);
+                _selectionMap[item.TargetViewModelType] = item;
             }
         }
 
-        public bool TryNavigate(object menuItem, Frame frame, NavigationView navigationView)
+        public bool TryNavigate(object menuItem)
         {
             if (_navigationMap.TryGetValue(menuItem, out var config))
             {
                 var page = GetOrCreatePage(config.ViewModelType);
-                frame.Navigate(page);
-                navigationView.Header = config.Title;
+                _frame.Navigate(page);
+                _navView.Header = config.Title;
                 return true;
             }
             return false;

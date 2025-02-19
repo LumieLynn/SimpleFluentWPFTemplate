@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Navigation;
+using NavigationService = SimpleTemplate.Services.NavigationService;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace SimpleTemplate.Views.ProxyPage
@@ -18,7 +19,13 @@ namespace SimpleTemplate.Views.ProxyPage
             set => SetValue(ViewModelProperty, value);
         }
 
-        public NavigationProxyPage()
+        public string SendViewModelName()
+        {
+            if (ViewModel == null) return string.Empty;
+            return ViewModel.GetType().FullName;
+        }
+
+        public NavigationProxyPage(NavigationService navigationService)
         {
             InitializeComponent();
         }

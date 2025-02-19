@@ -43,7 +43,7 @@
             IsPaneOpen="True"
             PaneTitle="{Binding PaneTitle}"
             IsTabStop="False"
-            SelectedItem="{Binding Selected, Mode=OneWay}"
+            SelectedItem="{Binding Selected}"
             MenuItemsSource="{Binding MenuItems}"
             IsTitleBarAutoPaddingEnabled="False"
             SelectionChanged="NavigationView_SelectionChanged"
