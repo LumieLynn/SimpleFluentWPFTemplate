@@ -45,10 +45,11 @@
             IsTabStop="False"
             SelectedItem="{Binding Selected}"
             MenuItemsSource="{Binding MenuItems}"
+            FooterMenuItemsSource="{Binding FooterItems}"
             IsTitleBarAutoPaddingEnabled="False"
             SelectionChanged="NavigationView_SelectionChanged"
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
-            IsSettingsVisible="True" Grid.ColumnSpan="2">
+            Grid.ColumnSpan="2">
 
             <FrameworkElement.Resources>
                 <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>

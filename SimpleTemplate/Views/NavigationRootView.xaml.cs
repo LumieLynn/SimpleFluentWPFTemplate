@@ -17,7 +17,8 @@ namespace SimpleTemplate.Views
             _navigationService = navigationService;
             DataContext = viewModel;
             _navigationService.SetProperties(Frame_Main, NavigationViewControl);
-            navigationService.ConfigureNavigation(viewModel.MenuItems);
+            _navigationService.ConfigureNavigation(viewModel.MenuItems);
+            _navigationService.ConfigureNavigation(viewModel.FooterItems);
         }
 
         private readonly NavigationService _navigationService;

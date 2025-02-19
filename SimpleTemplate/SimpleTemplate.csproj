@@ -7,6 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+    <ApplicationIcon>Assets\AppLogo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,8 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Assets\WpfLibrary_256w.png" />
+    <None Remove="Assets\iNKORE_logo.png" />
     <None Remove="Assets\WpfLibrary_Minimal_64w.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\AppLogo.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\iNKORE_logo.png" />
     <Resource Include="Assets\WpfLibrary_256w.png" />
     <Resource Include="Assets\WpfLibrary_Minimal_64w.png" />
   </ItemGroup>
