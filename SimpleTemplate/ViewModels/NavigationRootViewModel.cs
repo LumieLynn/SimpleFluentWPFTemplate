@@ -12,7 +12,7 @@ namespace SimpleTemplate.ViewModels
         private bool isBackEnabled;
 
         [ObservableProperty]
-        private ObservableCollection<NavigationItem> _menuItems = new();
+        private ObservableCollection<NavigationViewItem> _menuItems = new();
 
         [ObservableProperty]
         private ObservableCollection<NavigationItem> _footerItems = new();

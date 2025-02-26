@@ -5,7 +5,7 @@
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
          xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern" xmlns:ikw="http://schemas.inkore.net/lib/ui/wpf"
          xmlns:local="clr-namespace:SimpleTemplate.Views"
-         xmlns:vm="clr-namespace:SimpleTemplate.ViewModels"
+         xmlns:vm="clr-namespace:SimpleTemplate.ViewModels" d:DataContext="{d:DesignInstance Type=vm:NavigationRootViewModel}"
          mc:Ignorable="d" 
          d:DesignHeight="450" d:DesignWidth="800"
          ui:Title="NavigationRootView">
@@ -59,7 +59,8 @@
                 <DataTemplate>
                     <ui:NavigationViewItem
                         Content="{Binding Title}"
-                        Tag="{Binding TargetViewModelType}">
+                        Tag="{Binding TargetViewModelType}"
+                        MenuItemsSource="{Binding Children}">
                         <ui:NavigationViewItem.Icon>
                             <ContentControl Content="{Binding Icon}"/>
                         </ui:NavigationViewItem.Icon>

@@ -13,7 +13,7 @@ namespace SimpleTemplate.Infrastructure
                 .Where(t => t.IsClass && t.Name.EndsWith("ViewModel"));
             foreach (var type in vmTypes)
             {
-                services.AddSingleton(type);
+                services.AddTransient(type);
             }
             return services;
         }

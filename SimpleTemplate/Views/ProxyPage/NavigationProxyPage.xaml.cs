@@ -31,7 +31,7 @@ namespace SimpleTemplate.Views.ProxyPage
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            if (DataContext is IDisposable disposable)
+            if (ViewModel is IDisposable disposable)
             {
                 disposable.Dispose();
             }
