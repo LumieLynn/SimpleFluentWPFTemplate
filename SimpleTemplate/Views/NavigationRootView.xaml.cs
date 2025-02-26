@@ -14,8 +14,8 @@ namespace SimpleTemplate.Views
         public NavigationRootView(NavigationService navigationService, NavigationRootViewModel viewModel)
         {
             InitializeComponent();
-            _navigationService = navigationService;
             DataContext = viewModel;
+            _navigationService = navigationService;
             _navigationService.SetProperties(Frame_Main, NavigationViewControl);
             _navigationService.ConfigureNavigation(viewModel.MenuItems);
             _navigationService.ConfigureNavigation(viewModel.FooterItems);

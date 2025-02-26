@@ -2,7 +2,6 @@
 using System.Windows.Navigation;
 using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using SimpleTemplate.Models;
 using SimpleTemplate.Views.ProxyPage;
 using Frame = iNKORE.UI.WPF.Modern.Controls.Frame;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
@@ -65,7 +64,6 @@ namespace SimpleTemplate.Services
             if (currentPage != null && viewModelType != null)
             {
                 _navView.SelectedItem = _selectionMap[viewModelType];
-
             }
         }
 
@@ -79,12 +77,15 @@ namespace SimpleTemplate.Services
             _serviceProvider = serviceProvider;
         }
 
-        public void ConfigureNavigation(IEnumerable<NavigationItem> items)
+        public void ConfigureNavigation(IEnumerable<NavigationViewItem> items)
         {
             foreach (var item in items)
             {
-                _navigationMap[item] = (item.TargetViewModelType, item.Title);
-                _selectionMap[item.TargetViewModelType] = item;
+                string typeName = "SimpleTemplate.ViewModels." + Convert.ToString(item.Tag);
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                Type type = assembly.GetType(typeName);
+                _navigationMap[item] = (type, item.Content.ToString());
+                _selectionMap[type] = item;
             }
         }
 
