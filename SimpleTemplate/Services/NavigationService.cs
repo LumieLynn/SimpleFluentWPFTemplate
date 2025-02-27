@@ -25,7 +25,6 @@ namespace SimpleTemplate.Services
                 UpdateBackButton();
             };
             _navView = navigationView;
-
             _navView.BackRequested += NavView_BackRequested;
         }
 
@@ -64,6 +63,7 @@ namespace SimpleTemplate.Services
             if (currentPage != null && viewModelType != null)
             {
                 _navView.SelectedItem = _selectionMap[viewModelType];
+                _navView.Header = _navigationMap[_navView.SelectedItem].Title;
             }
         }
 
@@ -101,7 +101,7 @@ namespace SimpleTemplate.Services
             return false;
         }
 
-        private Page GetOrCreatePage(Type viewModelType)
+        public Page GetOrCreatePage(Type viewModelType)
         {
             if (_pageCache.TryGetValue(viewModelType, out var weakref) && weakref.TryGetTarget(out var cachedPage))
             {

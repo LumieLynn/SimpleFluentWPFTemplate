@@ -16,17 +16,18 @@ namespace SimpleTemplate.Views
             InitializeComponent();
             DataContext = viewModel;
             _navigationService = navigationService;
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
             _navigationService.SetProperties(Frame_Main, NavigationViewControl);
-            _navigationService.ConfigureNavigation(viewModel.MenuItems);
-            _navigationService.ConfigureNavigation(viewModel.FooterItems);
+            var page = _navigationService.GetOrCreatePage(typeof(HomePageViewModel));
+            NavigationViewControl.Header = "Home";
+            Frame_Main.Navigate(page);
         }
 
         private readonly NavigationService _navigationService;
-
-        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-        {
-            _navigationService.TryNavigate(sender.SelectedItem);
-        }
 
         private void NavigationViewControl_DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
         {
@@ -42,5 +43,12 @@ namespace SimpleTemplate.Views
             AppTitleBar.Visibility = sender.PaneDisplayMode == NavigationViewPaneDisplayMode.Top ? Visibility.Collapsed : Visibility.Visible;
             AppTitle.Margin = new Thickness(2, currMargin.Top, currMargin.Right, currMargin.Bottom);
         }
+
+        private void NavigationViewControl_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            _navigationService.TryNavigate(sender.SelectedItem);
+        }
+
+        
     }
 }

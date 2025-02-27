@@ -2,11 +2,14 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using iNKORE.UI.WPF.Modern.Common.IconKeys;
 using iNKORE.UI.WPF.Modern.Controls;
+using SimpleTemplate.Services;
 
 namespace SimpleTemplate.ViewModels
 {
     public partial class NavigationRootViewModel : ObservableRecipient
     {
+        private readonly NavigationService _navigationService;
+
         [ObservableProperty]
         private bool isBackEnabled;
 
@@ -16,13 +19,13 @@ namespace SimpleTemplate.ViewModels
             {
                 Content = "Home",
                 Icon = new FontIcon { Icon = SegoeFluentIcons.Home },
-                Tag = "HomePageViewModel"
+                Tag = "HomePageViewModel",
             },
             new NavigationViewItem()
             {
                 Content = "Apps",
                 Icon = new FontIcon { Icon = SegoeFluentIcons.OEM },
-                Tag = "AppsPageViewModel"
+                Tag = "AppsPageViewModel",
             },
         ];
 
@@ -51,8 +54,11 @@ namespace SimpleTemplate.ViewModels
         [ObservableProperty]
         private object? selected;
 
-        public NavigationRootViewModel()
+        public NavigationRootViewModel(NavigationService navigationService)
         {
+            _navigationService = navigationService;
+            _navigationService.ConfigureNavigation(MenuItems);
+            _navigationService.ConfigureNavigation(FooterItems);
             Selected = MenuItems.FirstOrDefault();
         }
 
