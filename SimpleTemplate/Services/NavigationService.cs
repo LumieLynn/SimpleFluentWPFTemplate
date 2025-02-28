@@ -26,11 +26,17 @@ namespace SimpleTemplate.Services
             };
             _navView = navigationView;
             _navView.BackRequested += NavView_BackRequested;
+            _navView.ItemInvoked += _navView_ItemInvoked;
         }
 
         private void NavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
             TryGoBack();
+        }
+
+        private void _navView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            TryNavigate(sender.SelectedItem);
         }
 
         private bool TryGoBack()
@@ -77,9 +83,22 @@ namespace SimpleTemplate.Services
             _serviceProvider = serviceProvider;
         }
 
-        public void ConfigureNavigation(IEnumerable<NavigationViewItem> items)
+        public void ConfigureNavigation(IEnumerable<object> items)
         {
             foreach (var item in items)
+            {
+                if (item is NavigationViewItem menuItem)
+                {
+                    RegisterMenuItem(menuItem);
+                    if (menuItem.MenuItemsSource != null && menuItem.MenuItemsSource is IEnumerable<object> child)
+                        ConfigureNavigation(child);
+                }
+            }
+        }
+
+        private void RegisterMenuItem(NavigationViewItem item)
+        {
+            if (item.Tag != null)
             {
                 string typeName = "SimpleTemplate.ViewModels." + Convert.ToString(item.Tag);
                 Assembly assembly = Assembly.GetExecutingAssembly();

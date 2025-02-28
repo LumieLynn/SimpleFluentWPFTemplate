@@ -47,7 +47,6 @@
             MenuItemsSource="{Binding MenuItems}"
             FooterMenuItemsSource="{Binding FooterItems}"
             IsTitleBarAutoPaddingEnabled="False"
-            ItemInvoked="NavigationViewControl_ItemInvoked"
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
             Grid.ColumnSpan="2">
 

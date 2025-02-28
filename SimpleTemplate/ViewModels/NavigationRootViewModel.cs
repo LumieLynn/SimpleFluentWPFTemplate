@@ -14,18 +14,33 @@ namespace SimpleTemplate.ViewModels
         private bool isBackEnabled;
 
         [ObservableProperty]
-        private ObservableCollection<NavigationViewItem> _menuItems = [
+        private ObservableCollection<object> _menuItems = [
             new NavigationViewItem()
             {
                 Content = "Home",
                 Icon = new FontIcon { Icon = SegoeFluentIcons.Home },
                 Tag = "HomePageViewModel",
             },
+            new NavigationViewItemSeparator(),
+            new NavigationViewItemHeader()
+            {
+                Content = "Hierarchical Items"
+            },
             new NavigationViewItem()
             {
-                Content = "Apps",
-                Icon = new FontIcon { Icon = SegoeFluentIcons.OEM },
-                Tag = "AppsPageViewModel",
+                Content = "Example",
+                Icon = new FontIcon { Icon = SegoeFluentIcons.Calendar },
+                SelectsOnInvoked = false,
+                IsExpanded = true,
+                MenuItemsSource = new ObservableCollection<object>
+                {
+                    new NavigationViewItem()
+                    {
+                        Content = "Apps",
+                        Icon = new FontIcon { Icon = SegoeFluentIcons.OEM },
+                        Tag = "AppsPageViewModel",
+                    },
+                }
             },
         ];
 

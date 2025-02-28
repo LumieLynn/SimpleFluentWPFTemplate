@@ -43,12 +43,5 @@ namespace SimpleTemplate.Views
             AppTitleBar.Visibility = sender.PaneDisplayMode == NavigationViewPaneDisplayMode.Top ? Visibility.Collapsed : Visibility.Visible;
             AppTitle.Margin = new Thickness(2, currMargin.Top, currMargin.Right, currMargin.Bottom);
         }
-
-        private void NavigationViewControl_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
-        {
-            _navigationService.TryNavigate(sender.SelectedItem);
-        }
-
-        
     }
 }
