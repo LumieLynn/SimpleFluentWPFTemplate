@@ -22,7 +22,8 @@
             Height="48"
             VerticalAlignment="Top"
             Background="Transparent"
-            IsHitTestVisible="True">
+            IsHitTestVisible="True"
+            Panel.ZIndex="1">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -42,6 +43,8 @@
             Grid.Column="1"
             IsPaneOpen="True"
             PaneTitle="{Binding PaneTitle}"
+            PaneOpening="NavigationViewControl_PaneOpening"
+            PaneClosing="NavigationViewControl_PaneClosing"
             IsTabStop="False"
             SelectedItem="{Binding Selected}"
             MenuItemsSource="{Binding MenuItems}"
@@ -53,9 +56,9 @@
             <FrameworkElement.Resources>
                 <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
             </FrameworkElement.Resources>
-            
+
             <ui:ScrollViewerEx
-                Margin="0,25,0,0">
+                Margin="0,15,0,0">
                 <ui:Frame x:Name="Frame_Main"
                           Margin="57,0,57,0" />
             </ui:ScrollViewerEx>

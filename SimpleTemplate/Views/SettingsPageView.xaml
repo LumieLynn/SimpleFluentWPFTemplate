@@ -13,8 +13,8 @@
         <ikw:SimpleStackPanel>
             <TextBlock
                 FontSize="18"
-                FontWeight="Bold"
-                Margin="0,0,0,3"
+                FontWeight="SemiBold"
+                Margin="0,0,0,7"
                 Text="General" />
             <ui:SettingsCard x:Name="settingsCard"
                              Header="Theme Mode" IsEnabled="True">

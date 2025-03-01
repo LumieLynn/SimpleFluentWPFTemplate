@@ -45,7 +45,7 @@ namespace SimpleTemplate.ViewModels
         ];
 
         [ObservableProperty]
-        private ObservableCollection<NavigationViewItem> _footerItems = [
+        private ObservableCollection<object> _footerItems = [
             new NavigationViewItem()
             {
                 Content = "About",

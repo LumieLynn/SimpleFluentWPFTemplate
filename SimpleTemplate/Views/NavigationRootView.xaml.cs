@@ -19,6 +19,22 @@ namespace SimpleTemplate.Views
             Loaded += OnLoaded;
         }
 
+        private void NavigationViewControl_PaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs args)
+        {
+            if (sender.DisplayMode == NavigationViewDisplayMode.Minimal)
+            {
+                AppTitleBar.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void NavigationViewControl_PaneOpening(NavigationView sender, object args)
+        {
+            if (sender.DisplayMode == NavigationViewDisplayMode.Minimal)
+            {
+                AppTitleBar.Visibility = Visibility.Collapsed;
+            }
+        }
+
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             _navigationService.SetProperties(Frame_Main, NavigationViewControl);
