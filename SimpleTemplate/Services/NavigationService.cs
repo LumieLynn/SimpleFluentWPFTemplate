@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Windows.Navigation;
+﻿using System.Windows.Navigation;
 using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Views.ProxyPage;
@@ -62,9 +61,7 @@ namespace SimpleTemplate.Services
             _frame.Navigated -= OnNavigatedBack;
 
             NavigationProxyPage currentPage = (NavigationProxyPage)_frame.Content;
-            var PageTypeName = currentPage.SendViewModelName();
-            var assembly = Assembly.GetExecutingAssembly();
-            var viewModelType = assembly.GetType(PageTypeName);
+            var viewModelType = currentPage.ViewModel.GetType();
 
             if (currentPage != null && viewModelType != null)
             {
@@ -98,11 +95,8 @@ namespace SimpleTemplate.Services
 
         private void RegisterMenuItem(NavigationViewItem item)
         {
-            if (item.Tag != null)
+            if (item.Tag != null && item.Tag is Type type)
             {
-                string typeName = "SimpleTemplate.ViewModels." + Convert.ToString(item.Tag);
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                Type type = assembly.GetType(typeName);
                 _navigationMap[item] = (type, item.Content.ToString());
                 _selectionMap[type] = item;
             }

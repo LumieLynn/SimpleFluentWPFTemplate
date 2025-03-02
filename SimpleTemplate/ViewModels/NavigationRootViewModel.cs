@@ -19,7 +19,7 @@ namespace SimpleTemplate.ViewModels
             {
                 Content = "Home",
                 Icon = new FontIcon { Icon = SegoeFluentIcons.Home },
-                Tag = "HomePageViewModel",
+                Tag = typeof(HomePageViewModel),
             },
             new NavigationViewItemSeparator(),
             new NavigationViewItemHeader()
@@ -38,7 +38,7 @@ namespace SimpleTemplate.ViewModels
                     {
                         Content = "Apps",
                         Icon = new FontIcon { Icon = SegoeFluentIcons.OEM },
-                        Tag = "AppsPageViewModel",
+                        Tag = typeof(AppsPageViewModel),
                     },
                 }
             },
@@ -50,13 +50,13 @@ namespace SimpleTemplate.ViewModels
             {
                 Content = "About",
                 Icon = new FontIcon { Icon = SegoeFluentIcons.Info },
-                Tag = "AboutPageViewModel"
+                Tag = typeof(AboutPageViewModel)
             },
             new NavigationViewItem()
             {
                 Content = "Settings",
                 Icon = new FontIcon { Icon = SegoeFluentIcons.Settings },
-                Tag = "SettingsPageViewModel"
+                Tag = typeof(SettingsPageViewModel)
             }
         ];
 

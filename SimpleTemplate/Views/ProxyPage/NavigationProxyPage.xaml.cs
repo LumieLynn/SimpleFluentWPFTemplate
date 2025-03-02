@@ -18,12 +18,6 @@ namespace SimpleTemplate.Views.ProxyPage
             set => SetValue(ViewModelProperty, value);
         }
 
-        public string SendViewModelName()
-        {
-            if (ViewModel == null) return string.Empty;
-            return ViewModel.GetType().FullName;
-        }
-
         public NavigationProxyPage()
         {
             InitializeComponent();
