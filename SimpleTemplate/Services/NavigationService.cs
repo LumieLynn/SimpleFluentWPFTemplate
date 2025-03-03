@@ -1,6 +1,7 @@
 ﻿using System.Windows.Navigation;
 using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleTemplate.ViewModels;
 using SimpleTemplate.Views.ProxyPage;
 using Frame = iNKORE.UI.WPF.Modern.Controls.Frame;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
@@ -24,15 +25,21 @@ namespace SimpleTemplate.Services
                 UpdateBackButton();
             };
             _navView = navigationView;
+            LaunchInitialize();
             _navView.BackRequested += NavView_BackRequested;
             _navView.ItemInvoked += _navView_ItemInvoked;
         }
-
+        private void LaunchInitialize()
+        {
+            Type type = typeof(HomePageViewModel);
+            var page = GetOrCreatePage(type);
+            _frame.Navigate(page);
+            _navView.Header = _navigationMap[_selectionMap[type]].Title;
+        }
         private void NavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
             TryGoBack();
         }
-
         private void _navView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             TryNavigate(sender.SelectedItem);

@@ -11,12 +11,11 @@ namespace SimpleTemplate.Views
     /// </summary>
     public partial class NavigationRootView : Page
     {
-        public NavigationRootView(NavigationService navigationService, NavigationRootViewModel viewModel)
+        public NavigationRootView(NavigationRootViewModel viewModel)
         {
             InitializeComponent();
             DataContext = viewModel;
-            _navigationService = navigationService;
-            Loaded += OnLoaded;
+            viewModel._navigationService.SetProperties(Frame_Main, NavigationViewControl);
         }
 
         private void NavigationViewControl_PaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs args)
@@ -34,16 +33,6 @@ namespace SimpleTemplate.Views
                 AppTitleBar.Visibility = Visibility.Collapsed;
             }
         }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            _navigationService.SetProperties(Frame_Main, NavigationViewControl);
-            var page = _navigationService.GetOrCreatePage(typeof(HomePageViewModel));
-            NavigationViewControl.Header = "Home";
-            Frame_Main.Navigate(page);
-        }
-
-        private readonly NavigationService _navigationService;
 
         private void NavigationViewControl_DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
         {

@@ -8,7 +8,7 @@ namespace SimpleTemplate.ViewModels
 {
     public partial class NavigationRootViewModel : ObservableRecipient
     {
-        private readonly NavigationService _navigationService;
+        public readonly NavigationService _navigationService;
 
         [ObservableProperty]
         private bool isBackEnabled;
