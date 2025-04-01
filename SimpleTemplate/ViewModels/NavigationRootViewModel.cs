@@ -2,15 +2,15 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using iNKORE.UI.WPF.Modern.Common.IconKeys;
 using iNKORE.UI.WPF.Modern.Controls;
-using SimpleTemplate.Services;
+using SimpleTemplate.Contracts.Services;
 
 namespace SimpleTemplate.ViewModels
 {
     public partial class NavigationRootViewModel : ObservableRecipient
     {
-        public readonly NavigationService _navigationService;
-        public readonly NavigationViewService _navigationViewService;
-        public readonly PageService _pageService;
+        public readonly INavigationService _navigationService;
+        public readonly INavigationViewService _navigationViewService;
+        public readonly IPageService _pageService;
 
         [ObservableProperty]
         private ObservableCollection<object> _menuItems = [
@@ -74,7 +74,7 @@ namespace SimpleTemplate.ViewModels
         [ObservableProperty]
         private object? header;
 
-        public NavigationRootViewModel(NavigationService navigationService, NavigationViewService navigationViewService, PageService pageService)
+        public NavigationRootViewModel(INavigationService navigationService, INavigationViewService navigationViewService, IPageService pageService)
         {
             _navigationService = navigationService;
             _navigationService.Navigated += OnNavigated;

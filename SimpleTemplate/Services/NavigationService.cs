@@ -1,5 +1,6 @@
 ﻿using System.Windows.Navigation;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.ViewModels;
 using SimpleTemplate.Views.ProxyPage;
 using Frame = iNKORE.UI.WPF.Modern.Controls.Frame;
@@ -7,15 +8,14 @@ using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace SimpleTemplate.Services
 {
-    public class NavigationService
+    public class NavigationService : INavigationService
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly PageService _pageService;
+        private readonly IPageService _pageService;
         private readonly Dictionary<Type, WeakReference<Page>> _pageCache = new();
         private Frame? _frame;
 
         public event EventHandler Navigated;
-        public event EventHandler NavigatedBack;
 
         public void Initialize(Frame frame)
         {
@@ -45,7 +45,7 @@ namespace SimpleTemplate.Services
             return navigated;
         }
 
-        public NavigationService(IServiceProvider serviceProvider, PageService pageService)
+        public NavigationService(IServiceProvider serviceProvider, IPageService pageService)
         {
             _serviceProvider = serviceProvider;
             _pageService = pageService;

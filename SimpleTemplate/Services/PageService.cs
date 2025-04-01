@@ -1,8 +1,9 @@
 ﻿using iNKORE.UI.WPF.Modern.Controls;
+using SimpleTemplate.Contracts.Services;
 
 namespace SimpleTemplate.Services
 {
-    public class PageService
+    public class PageService : IPageService
     {
         private readonly Dictionary<string, Type> _pages = new();
 

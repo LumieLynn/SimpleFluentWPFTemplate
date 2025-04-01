@@ -1,22 +1,23 @@
 ﻿using iNKORE.UI.WPF.Modern.Controls;
+using SimpleTemplate.Contracts.Services;
 using NavigationView = iNKORE.UI.WPF.Modern.Controls.NavigationView;
 
 namespace SimpleTemplate.Services
 {
-    public class NavigationViewService
+    public class NavigationViewService : INavigationViewService
     {
-        private readonly NavigationService _navigationService;
+        private readonly INavigationService _navigationService;
         private NavigationView? _navigationView;
 
         public IEnumerable<object>? MenuItems;
         public IEnumerable<object>? FooterItems;
 
-        public NavigationViewService(NavigationService navigationService)
+        public NavigationViewService(INavigationService navigationService)
         {
             _navigationService = navigationService;
         }
 
-        public void Initialize(NavigationView navigationView, IEnumerable<object> menuItems, IEnumerable<object>? footerItems)
+        public void Initialize(NavigationView navigationView, IEnumerable<object>? menuItems, IEnumerable<object>? footerItems)
         {
             _navigationView = navigationView;
             MenuItems = menuItems;
@@ -30,9 +31,8 @@ namespace SimpleTemplate.Services
         private void OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             var selectedItem = args.InvokedItemContainer as NavigationViewItem;
-            if (selectedItem != null)
+            if (selectedItem != null && selectedItem.Tag is Type pageType)
             {
-                var pageType = selectedItem.Tag as Type;
                 var pageKey = pageType.FullName!;
                 _navigationService.NavigateTo(pageKey);
             }

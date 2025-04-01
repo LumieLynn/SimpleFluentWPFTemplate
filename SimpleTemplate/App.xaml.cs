@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.Infrastructure;
 using SimpleTemplate.Services;
 using SimpleTemplate.Views;
@@ -24,9 +25,9 @@ namespace SimpleTemplate
         private static IServiceProvider ConfigureServices()
         {
             return new ServiceCollection()
-                .AddSingleton<NavigationService>()
-                .AddSingleton<NavigationViewService>()
-                .AddSingleton<PageService>()
+                .AddSingleton<INavigationService, NavigationService>()
+                .AddTransient<INavigationViewService, NavigationViewService>()
+                .AddSingleton<IPageService, PageService>()
                 .AddTransient<NavigationRootView>()
                 .AddTransient<NavigationProxyPage>()
                 .AddViewModels()

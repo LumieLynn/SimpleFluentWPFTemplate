@@ -37,8 +37,4 @@
     <Resource Include="Assets\WpfLibrary_Minimal_64w.png" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Contracts\" />
-  </ItemGroup>
-
 </Project>
