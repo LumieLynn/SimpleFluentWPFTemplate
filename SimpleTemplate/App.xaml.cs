@@ -25,6 +25,8 @@ namespace SimpleTemplate
         {
             return new ServiceCollection()
                 .AddSingleton<NavigationService>()
+                .AddSingleton<NavigationViewService>()
+                .AddSingleton<PageService>()
                 .AddTransient<NavigationRootView>()
                 .AddTransient<NavigationProxyPage>()
                 .AddViewModels()

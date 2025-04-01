@@ -46,10 +46,12 @@
             PaneOpening="NavigationViewControl_PaneOpening"
             PaneClosing="NavigationViewControl_PaneClosing"
             IsTabStop="False"
-            SelectedItem="{Binding Selected}"
+            IsBackEnabled="{Binding IsBackEnabled}"
+            SelectedItem="{Binding Selected,Mode=TwoWay}"
             MenuItemsSource="{Binding MenuItems}"
             FooterMenuItemsSource="{Binding FooterItems}"
             IsTitleBarAutoPaddingEnabled="False"
+            Header="{Binding Header}"
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
             Grid.ColumnSpan="2">
 

@@ -9,9 +9,8 @@ namespace SimpleTemplate.ViewModels
     public partial class NavigationRootViewModel : ObservableRecipient
     {
         public readonly NavigationService _navigationService;
-
-        [ObservableProperty]
-        private bool isBackEnabled;
+        public readonly NavigationViewService _navigationViewService;
+        public readonly PageService _pageService;
 
         [ObservableProperty]
         private ObservableCollection<object> _menuItems = [
@@ -61,6 +60,9 @@ namespace SimpleTemplate.ViewModels
         ];
 
         [ObservableProperty]
+        private bool isBackEnabled;
+
+        [ObservableProperty]
         private string _appTitle = "SimpleTemplate";
 
         [ObservableProperty]
@@ -69,13 +71,33 @@ namespace SimpleTemplate.ViewModels
         [ObservableProperty]
         private object? selected;
 
-        public NavigationRootViewModel(NavigationService navigationService)
+        [ObservableProperty]
+        private object? header;
+
+        public NavigationRootViewModel(NavigationService navigationService, NavigationViewService navigationViewService, PageService pageService)
         {
             _navigationService = navigationService;
-            _navigationService.ConfigureNavigation(MenuItems);
-            _navigationService.ConfigureNavigation(FooterItems);
-            Selected = MenuItems.FirstOrDefault();
+            _navigationService.Navigated += OnNavigated;
+            _navigationViewService = navigationViewService;
+            _pageService = pageService;
+            _pageService.ConfigurePages(MenuItems);
+            _pageService.ConfigurePages(FooterItems);
         }
 
+        private void OnNavigated(object? sender, EventArgs e)
+        {
+            IsBackEnabled = _navigationService.CanGoBack;
+            Selected = _navigationViewService.GetCurrentSelectedItem();
+            if (Selected is NavigationViewItem item)
+            {
+                Header = item.Content as string;
+            }
+        }
+
+        public void SetProperties(NavigationView navigationView, Frame frame)
+        {
+            _navigationViewService.Initialize(navigationView, MenuItems, FooterItems);
+            _navigationService.Initialize(frame);
+        }
     }
 }

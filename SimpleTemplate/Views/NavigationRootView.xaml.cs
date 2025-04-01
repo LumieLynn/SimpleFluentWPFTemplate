@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using iNKORE.UI.WPF.Modern.Controls;
-using SimpleTemplate.Services;
 using SimpleTemplate.ViewModels;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
@@ -15,7 +14,7 @@ namespace SimpleTemplate.Views
         {
             InitializeComponent();
             DataContext = viewModel;
-            viewModel._navigationService.SetProperties(Frame_Main, NavigationViewControl);
+            viewModel.SetProperties(NavigationViewControl, Frame_Main);
         }
 
         private void NavigationViewControl_PaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs args)
