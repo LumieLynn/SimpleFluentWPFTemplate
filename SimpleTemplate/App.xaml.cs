@@ -25,12 +25,15 @@ namespace SimpleTemplate
         private static IServiceProvider ConfigureServices()
         {
             return new ServiceCollection()
+                // Services
                 .AddSingleton<INavigationService, NavigationService>()
-                .AddTransient<INavigationViewService, NavigationViewService>()
+                .AddSingleton<INavigationViewService, NavigationViewService>()
                 .AddSingleton<IPageService, PageService>()
+                // Pages
                 .AddTransient<NavigationRootView>()
                 .AddTransient<NavigationProxyPage>()
                 .AddViewModels()
+                // Windows
                 .AddSingleton<MainWindow>()
                 .BuildServiceProvider();
         }

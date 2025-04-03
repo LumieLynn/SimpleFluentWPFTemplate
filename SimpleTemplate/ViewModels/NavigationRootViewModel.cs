@@ -74,14 +74,11 @@ namespace SimpleTemplate.ViewModels
         [ObservableProperty]
         private object? header;
 
-        public NavigationRootViewModel(INavigationService navigationService, INavigationViewService navigationViewService, IPageService pageService)
+        public NavigationRootViewModel(INavigationService navigationService, INavigationViewService navigationViewService)
         {
             _navigationService = navigationService;
             _navigationService.Navigated += OnNavigated;
             _navigationViewService = navigationViewService;
-            _pageService = pageService;
-            _pageService.ConfigurePages(MenuItems);
-            _pageService.ConfigurePages(FooterItems);
         }
 
         private void OnNavigated(object? sender, EventArgs e)

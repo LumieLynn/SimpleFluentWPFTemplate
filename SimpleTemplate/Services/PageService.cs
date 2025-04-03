@@ -1,5 +1,4 @@
-﻿using iNKORE.UI.WPF.Modern.Controls;
-using SimpleTemplate.Contracts.Services;
+﻿using SimpleTemplate.Contracts.Services;
 
 namespace SimpleTemplate.Services
 {
@@ -17,20 +16,10 @@ namespace SimpleTemplate.Services
             return pageType;
         }
 
-        public void ConfigurePages(IEnumerable<object> items)
+        public void ConfigurePages(string PageKey, Type PageType)
         {
-            foreach (var item in items)
-            {
-                if (item is NavigationViewItem menuItem)
-                {
-                    if (menuItem.Tag is Type pageType)
-                    {
-                        _pages.Add(pageType.FullName!, pageType);
-                    }
-                    if (menuItem.MenuItemsSource is IEnumerable<object> child)
-                        ConfigurePages(child);
-                }
-            }
+            _pages.Add(PageKey, PageType);
         }
+
     }
 }

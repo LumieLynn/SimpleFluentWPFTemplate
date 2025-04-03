@@ -47,7 +47,7 @@
             PaneClosing="NavigationViewControl_PaneClosing"
             IsTabStop="False"
             IsBackEnabled="{Binding IsBackEnabled}"
-            SelectedItem="{Binding Selected,Mode=TwoWay}"
+            SelectedItem="{Binding Selected, Mode=TwoWay}"
             MenuItemsSource="{Binding MenuItems}"
             FooterMenuItemsSource="{Binding FooterItems}"
             IsTitleBarAutoPaddingEnabled="False"

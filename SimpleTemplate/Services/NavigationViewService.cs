@@ -1,4 +1,5 @@
-﻿using iNKORE.UI.WPF.Modern.Controls;
+﻿using System.Diagnostics;
+using iNKORE.UI.WPF.Modern.Controls;
 using SimpleTemplate.Contracts.Services;
 using NavigationView = iNKORE.UI.WPF.Modern.Controls.NavigationView;
 
@@ -7,14 +8,18 @@ namespace SimpleTemplate.Services
     public class NavigationViewService : INavigationViewService
     {
         private readonly INavigationService _navigationService;
+        private readonly IPageService _pageService;
         private NavigationView? _navigationView;
 
         public IEnumerable<object>? MenuItems;
         public IEnumerable<object>? FooterItems;
 
-        public NavigationViewService(INavigationService navigationService)
+        private readonly Dictionary<Type, NavigationViewItem> typeItemPairs = new();
+
+        public NavigationViewService(INavigationService navigationService, IPageService pageService)
         {
             _navigationService = navigationService;
+            _pageService = pageService;
         }
 
         public void Initialize(NavigationView navigationView, IEnumerable<object>? menuItems, IEnumerable<object>? footerItems)
@@ -22,6 +27,10 @@ namespace SimpleTemplate.Services
             _navigationView = navigationView;
             MenuItems = menuItems;
             FooterItems = footerItems;
+            if (menuItems != null)
+                ConfigurePairs(menuItems);
+            if (footerItems != null)
+                ConfigurePairs(footerItems);
             _navigationView.BackRequested += OnBackRequested;
             _navigationView.ItemInvoked += OnItemInvoked;
         }
@@ -38,32 +47,41 @@ namespace SimpleTemplate.Services
             }
         }
 
+        public void ConfigurePairs(IEnumerable<object> items)
+        {
+            foreach (var item in items)
+            {
+                if (item is NavigationViewItem menuItem)
+                {
+                    if (menuItem.Tag is Type pageType)
+                    {
+                        typeItemPairs.Add(pageType, menuItem);
+                        var pageKey = pageType.FullName!;
+                        _pageService.ConfigurePages(pageKey, pageType);
+                    }
+                    if (menuItem.MenuItemsSource is IEnumerable<object> child)
+                        ConfigurePairs(child);
+                }
+            }
+        }
+
         public NavigationViewItem? GetCurrentSelectedItem()
         {
             var currentViewModel = _navigationService.GetCurrentViewModel();
             if (currentViewModel == null)
                 return null;
             var currentPageType = currentViewModel.GetType();
-            return GetSelectedItem(MenuItems, currentPageType) ?? GetSelectedItem(FooterItems, currentPageType);
+            var selectedItem = GetSelectedItem(currentPageType);
+            Debug.WriteLine($"CurrentSelectedItem: {_navigationView.SelectedItem}");
+            return GetSelectedItem(currentPageType);
         }
 
-        private NavigationViewItem? GetSelectedItem(IEnumerable<object> menuItems, Type pageType)
+        private NavigationViewItem? GetSelectedItem(Type pageType)
         {
-            foreach (var item in menuItems.OfType<NavigationViewItem>())
+            if (typeItemPairs.TryGetValue(pageType, out var selectedItem))
             {
-                if (item is NavigationViewItem menuItem)
-                {
-                    if (menuItem.Tag is Type tagType && tagType == pageType)
-                        return menuItem;
-                    if (menuItem.MenuItemsSource is IEnumerable<object> child)
-                    {
-                        var selectedItem = GetSelectedItem(child, pageType);
-                        if (selectedItem != null)
-                            return selectedItem;
-                    }
-                }
+                return selectedItem;
             }
-
             return null;
         }
     }
