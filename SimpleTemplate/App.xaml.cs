@@ -30,7 +30,7 @@ namespace SimpleTemplate
                 .AddSingleton<INavigationViewService, NavigationViewService>()
                 .AddSingleton<IPageService, PageService>()
                 // Pages
-                .AddTransient<NavigationRootView>()
+                .AddSingleton<NavigationRootView>()
                 .AddTransient<NavigationProxyPage>()
                 .AddViewModels()
                 // Windows

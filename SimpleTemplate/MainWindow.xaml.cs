@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows;
-using Microsoft.Extensions.DependencyInjection;
+using SimpleTemplate.Contracts.Services;
+using SimpleTemplate.ViewModels;
 using SimpleTemplate.Views;
 
 namespace SimpleTemplate
@@ -10,15 +11,27 @@ namespace SimpleTemplate
     /// </summary>
     public partial class MainWindow : Window
     {
-        private CancellationTokenSource _initializationCts;
+        private readonly INavigationService _navService;
+        private readonly INavigationViewService _navViewService;
+        private readonly NavigationRootView _rootView;
+        private readonly NavigationRootViewModel _rootVM;
 
-        public MainWindow()
+        public MainWindow(
+            INavigationService navService,
+            INavigationViewService navViewService,
+            NavigationRootView rootView,
+            NavigationRootViewModel rootVM)
         {
+            _navService = navService;
+            _navViewService = navViewService;
+            _rootView = rootView;
+            _rootVM = rootVM;
+
             InitializeComponent();
-            Loaded += OnLoaded;
+            Loaded += async (s, e) => await OnLoadedAsync(s, e);
         }
 
-        private async void OnLoaded(object sender, RoutedEventArgs e)
+        private async Task OnLoadedAsync(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -32,43 +45,15 @@ namespace SimpleTemplate
 
         private async Task InitializeAppAsync()
         {
-            _initializationCts = new CancellationTokenSource();
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(4));
             try
             {
-                await Task.Delay(2000, _initializationCts.Token)
-                    .ConfigureAwait(true); // Ensure to return to the UI thread
+                var initializationTask = InitializationNavigationAsync(cts.Token);
+                var delayTask = Task.Delay(2000, cts.Token);
 
-                Debug.WriteLine("Initializing services...");
+                await Task.WhenAll(initializationTask, delayTask);
 
-                // Check the container status before obtaining services
-                if (App.Current.Services == null)
-                {
-                    throw new InvalidOperationException("ServiceProvider 未初始化");
-                }
-
-                //var navService = App.Current.Services.GetRequiredService<INavigationService>();
-                //var navViewService = App.Current.Services.GetRequiredService<INavigationViewService>();
-                //var rootV = App.Current.Services.GetRequiredService<NavigationRootView>();
-                //var rootVM = App.Current.Services.GetRequiredService<NavigationRootViewModel>();
-
-                //Debug.WriteLine($"Obtainings services success：navViewService={navViewService != null}, rootVM={rootVM != null}");
-
-                //// Configure navigation relationships
-                //navViewService.ConfigurePairs(rootVM.MenuItems);
-                //navViewService.ConfigurePairs(rootVM.FooterItems);
-
-                //// Service initialization
-                //navViewService.Initialize(rootV.NavigationViewControl, rootVM.MenuItems, rootVM.FooterItems);
-                //navService.Initialize(rootV.Frame_Main);
-                //var source = rootV.NavigationViewControl.MenuItemsSource;
-
-
-                // Ensure operation on the UI thread
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    Content = App.Current.Services.GetRequiredService<NavigationRootView>();
-
-                });
+                Content = _rootView;
             }
             catch (TaskCanceledException)
             {
@@ -81,9 +66,14 @@ namespace SimpleTemplate
             }
         }
 
+        private async Task InitializationNavigationAsync(CancellationToken token)
+        {
+            _navViewService.Initialize(_rootView.NavigationViewControl, _rootVM.MenuItems, _rootVM.FooterItems);
+            _navService.Initialize(_rootView.Frame_Main);
+        }
+
         protected override void OnClosed(EventArgs e)
         {
-            _initializationCts?.Cancel();
             base.OnClosed(e);
         }
     }

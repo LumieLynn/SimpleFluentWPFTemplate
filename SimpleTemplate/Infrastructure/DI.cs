@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleTemplate.ViewModels;
 
 namespace SimpleTemplate.Infrastructure
 {
@@ -13,7 +14,8 @@ namespace SimpleTemplate.Infrastructure
                 .Where(t => t.IsClass && t.Name.EndsWith("ViewModel"));
             foreach (var type in vmTypes)
             {
-                services.AddTransient(type);
+                if (type == typeof(NavigationRootViewModel)) services.AddSingleton(type);
+                else services.AddTransient(type);
             }
             return services;
         }
