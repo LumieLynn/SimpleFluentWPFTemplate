@@ -11,7 +11,8 @@
       Title="AppsPageView">
 
     <Grid>
-        <ItemsControl ItemsSource="{Binding ButtonSource}">
+        <ItemsControl ItemsSource="{Binding ButtonSource}"
+                      VirtualizingPanel.IsVirtualizing="True" >
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button

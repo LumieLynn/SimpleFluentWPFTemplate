@@ -70,6 +70,7 @@ namespace SimpleTemplate
         {
             _navViewService.Initialize(_rootView.NavigationViewControl, _rootVM.MenuItems, _rootVM.FooterItems);
             _navService.Initialize(_rootView.Frame_Main);
+            await Task.Delay(1, token);
         }
 
         protected override void OnClosed(EventArgs e)

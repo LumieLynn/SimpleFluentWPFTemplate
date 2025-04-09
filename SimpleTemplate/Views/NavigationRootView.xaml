@@ -61,7 +61,8 @@
             </FrameworkElement.Resources>
 
             <ui:ScrollViewerEx
-                Margin="0,15,0,0">
+                Margin="0,15,0,0"
+                CanContentScroll="True">
                 <ui:Frame x:Name="Frame_Main"
                           Margin="57,0,57,0" />
             </ui:ScrollViewerEx>
