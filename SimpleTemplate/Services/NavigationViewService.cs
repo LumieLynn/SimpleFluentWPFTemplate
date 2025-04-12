@@ -11,9 +11,6 @@ namespace SimpleTemplate.Services
         private readonly IPageService _pageService;
         private NavigationView? _navigationView;
 
-        public IEnumerable<object>? MenuItems;
-        public IEnumerable<object>? FooterItems;
-
         private readonly Dictionary<Type, NavigationViewItem> typeItemPairs = new();
 
         public NavigationViewService(INavigationService navigationService, IPageService pageService)
@@ -22,11 +19,9 @@ namespace SimpleTemplate.Services
             _pageService = pageService;
         }
 
-        public void Initialize(NavigationView navigationView, IEnumerable<object>? menuItems, IEnumerable<object>? footerItems)
+        public void Initialize(NavigationView navigationView, IEnumerable<object>? menuItems = null, IEnumerable<object>? footerItems = null)
         {
             _navigationView = navigationView;
-            MenuItems = menuItems;
-            FooterItems = footerItems;
             if (menuItems != null)
                 ConfigurePairs(menuItems);
             if (footerItems != null)
@@ -73,7 +68,7 @@ namespace SimpleTemplate.Services
             var currentPageType = currentViewModel.GetType();
             var selectedItem = GetSelectedItem(currentPageType);
             Debug.WriteLine($"CurrentSelectedItem: {_navigationView.SelectedItem}");
-            return GetSelectedItem(currentPageType);
+            return selectedItem;
         }
 
         private NavigationViewItem? GetSelectedItem(Type pageType)

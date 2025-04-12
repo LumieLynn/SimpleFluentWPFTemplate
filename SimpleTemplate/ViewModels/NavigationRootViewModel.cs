@@ -8,9 +8,8 @@ namespace SimpleTemplate.ViewModels
 {
     public partial class NavigationRootViewModel : ObservableRecipient
     {
-        public readonly INavigationService _navigationService;
-        public readonly INavigationViewService _navigationViewService;
-        public readonly IPageService _pageService;
+        private readonly INavigationService _navigationService;
+        private readonly INavigationViewService _navigationViewService;
 
         [ObservableProperty]
         private ObservableCollection<object> _menuItems = [
@@ -91,10 +90,5 @@ namespace SimpleTemplate.ViewModels
             }
         }
 
-        public void SetProperties(NavigationView navigationView, Frame frame)
-        {
-            _navigationViewService.Initialize(navigationView, MenuItems, FooterItems);
-            _navigationService.Initialize(frame);
-        }
     }
 }
