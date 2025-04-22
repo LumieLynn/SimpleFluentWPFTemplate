@@ -48,7 +48,7 @@ namespace SimpleTemplate
             base.OnStartup(e);
             try
             {
-                await RegisterAutoDataTemplatesAsync();
+                await RegisterDataTemplatesAsync();
                 var mainWindow = Services.GetRequiredService<MainWindow>();
                 mainWindow.Show();
             }
@@ -59,7 +59,7 @@ namespace SimpleTemplate
             }
         }
 
-        private async Task RegisterAutoDataTemplatesAsync()
+        private static async Task RegisterDataTemplatesAsync()
         {
             var (assembly, viewTypes) = await Task.Run(() =>
             {
@@ -101,7 +101,7 @@ namespace SimpleTemplate
             }
         }
 
-        private DataTemplate CreateDataTemplate(Type vmType, Type viewType)
+        private static DataTemplate CreateDataTemplate(Type vmType, Type viewType)
         {
             return new DataTemplate
             {

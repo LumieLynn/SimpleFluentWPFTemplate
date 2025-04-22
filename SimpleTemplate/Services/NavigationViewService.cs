@@ -5,19 +5,11 @@ using NavigationView = iNKORE.UI.WPF.Modern.Controls.NavigationView;
 
 namespace SimpleTemplate.Services
 {
-    public class NavigationViewService : INavigationViewService
+    public class NavigationViewService(INavigationService navigationService, IPageService pageService) : INavigationViewService
     {
-        private readonly INavigationService _navigationService;
-        private readonly IPageService _pageService;
         private NavigationView? _navigationView;
 
         private readonly Dictionary<Type, NavigationViewItem> typeItemPairs = new();
-
-        public NavigationViewService(INavigationService navigationService, IPageService pageService)
-        {
-            _navigationService = navigationService;
-            _pageService = pageService;
-        }
 
         public void Initialize(NavigationView navigationView, IEnumerable<object>? menuItems = null, IEnumerable<object>? footerItems = null)
         {
@@ -30,15 +22,14 @@ namespace SimpleTemplate.Services
             _navigationView.ItemInvoked += OnItemInvoked;
         }
 
-        private void OnBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) => _navigationService.GoBack();
+        private void OnBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) => navigationService.GoBack();
 
         private void OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            var selectedItem = args.InvokedItemContainer as NavigationViewItem;
-            if (selectedItem != null && selectedItem.Tag is Type pageType)
+            if (args.InvokedItemContainer is NavigationViewItem selectedItem && selectedItem.Tag is Type pageType)
             {
                 var pageKey = pageType.FullName!;
-                _navigationService.NavigateTo(pageKey);
+                navigationService.NavigateTo(pageKey);
             }
         }
 
@@ -52,7 +43,7 @@ namespace SimpleTemplate.Services
                     {
                         typeItemPairs.Add(pageType, menuItem);
                         var pageKey = pageType.FullName!;
-                        _pageService.ConfigurePages(pageKey, pageType);
+                        pageService.ConfigurePages(pageKey, pageType);
                     }
                     if (menuItem.MenuItemsSource is IEnumerable<object> child)
                         ConfigurePairs(child);
@@ -62,7 +53,7 @@ namespace SimpleTemplate.Services
 
         public NavigationViewItem? GetCurrentSelectedItem()
         {
-            var currentViewModel = _navigationService.GetCurrentViewModel();
+            var currentViewModel = navigationService.GetCurrentViewModel();
             if (currentViewModel == null)
                 return null;
             var currentPageType = currentViewModel.GetType();

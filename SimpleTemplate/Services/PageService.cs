@@ -8,8 +8,7 @@ namespace SimpleTemplate.Services
 
         public Type GetPageType(string key)
         {
-            Type? pageType;
-            if (!_pages.TryGetValue(key, out pageType))
+            if (!_pages.TryGetValue(key, out Type? pageType))
             {
                 throw new InvalidOperationException($"Page with key '{key}' not found.");
             }

@@ -9,8 +9,6 @@ namespace SimpleTemplate.Services
 {
     public class NavigationService(IServiceProvider serviceProvider, IPageService pageService) : INavigationService
     {
-        private readonly IServiceProvider _serviceProvider = serviceProvider;
-        private readonly IPageService _pageService = pageService;
         private readonly Dictionary<Type, WeakReference<Page>> _pageCache = new();
         private Frame? _frame;
 
@@ -47,7 +45,7 @@ namespace SimpleTemplate.Services
 
         public bool NavigateTo(string pageKey)
         {
-            var pageType = _pageService.GetPageType(pageKey);
+            var pageType = pageService.GetPageType(pageKey);
             if (_frame != null)
             {
                 var navigated = _frame.Navigate(GetOrCreatePage(pageType));
@@ -64,8 +62,8 @@ namespace SimpleTemplate.Services
                 return cachedPage;
             }
 
-            var newPage = _serviceProvider.GetRequiredService<NavigationProxyPage>();
-            newPage.ViewModel = _serviceProvider.GetRequiredService(viewModelType);
+            var newPage = serviceProvider.GetRequiredService<NavigationProxyPage>();
+            newPage.ViewModel = serviceProvider.GetRequiredService(viewModelType);
 
             _pageCache[viewModelType] = new WeakReference<Page>(newPage);
             return newPage;
