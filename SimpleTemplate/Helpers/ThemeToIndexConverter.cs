@@ -20,7 +20,7 @@ namespace SimpleTemplate.Helpers
             return 1;
         }
 
-        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value is 2)
             {

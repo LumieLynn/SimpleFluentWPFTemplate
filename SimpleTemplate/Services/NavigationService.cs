@@ -1,29 +1,29 @@
 ﻿using System.Windows.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Contracts.Services;
-using SimpleTemplate.ViewModels;
 using SimpleTemplate.Views.ProxyPage;
 using Frame = iNKORE.UI.WPF.Modern.Controls.Frame;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace SimpleTemplate.Services
 {
-    public class NavigationService : INavigationService
+    public class NavigationService(IServiceProvider serviceProvider, IPageService pageService) : INavigationService
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IPageService _pageService;
+        private readonly IServiceProvider _serviceProvider = serviceProvider;
+        private readonly IPageService _pageService = pageService;
         private readonly Dictionary<Type, WeakReference<Page>> _pageCache = new();
         private Frame? _frame;
 
-        public event EventHandler Navigated;
+        public event EventHandler? Navigated;
 
-        public void Initialize(Frame frame)
+        public void Initialize(Frame frame, string? pageKey = null)
         {
             _frame = frame;
             frame.Navigated += OnNavigated;
-            var pageType = typeof(HomePageViewModel);
-            var pageKey = pageType.FullName!;
-            NavigateTo(pageKey);
+            if (pageKey != null)
+            {
+                NavigateTo(pageKey);
+            }
         }
 
         private void OnNavigated(object sender, NavigationEventArgs e)
@@ -36,19 +36,13 @@ namespace SimpleTemplate.Services
         public bool GoBack()
         {
             bool navigated = false;
-            if (CanGoBack)
+            if (CanGoBack && _frame != null)
             {
                 _frame.GoBack();
                 navigated = true;
             }
 
             return navigated;
-        }
-
-        public NavigationService(IServiceProvider serviceProvider, IPageService pageService)
-        {
-            _serviceProvider = serviceProvider;
-            _pageService = pageService;
         }
 
         public bool NavigateTo(string pageKey)

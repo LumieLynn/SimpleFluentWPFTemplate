@@ -6,7 +6,7 @@ namespace SimpleTemplate.Contracts.Services
     {
         event EventHandler Navigated;
 
-        void Initialize(Frame frame);
+        void Initialize(Frame frame, string pageKey);
 
         bool CanGoBack
         {

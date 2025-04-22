@@ -67,7 +67,8 @@ namespace SimpleTemplate.Services
                 return null;
             var currentPageType = currentViewModel.GetType();
             var selectedItem = GetSelectedItem(currentPageType);
-            Debug.WriteLine($"CurrentSelectedItem: {_navigationView.SelectedItem}");
+            if (_navigationView != null)
+                Debug.WriteLine($"CurrentSelectedItem: {_navigationView.SelectedItem}");
             return selectedItem;
         }
 
