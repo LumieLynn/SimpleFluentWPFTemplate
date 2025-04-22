@@ -14,7 +14,6 @@ namespace SimpleTemplate.Views
         {
             InitializeComponent();
             DataContext = viewModel;
-            //viewModel.SetProperties(NavigationViewControl, Frame_Main);
         }
 
         private void NavigationViewControl_PaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs args)

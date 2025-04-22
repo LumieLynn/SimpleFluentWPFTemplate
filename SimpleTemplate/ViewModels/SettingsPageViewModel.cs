@@ -8,29 +8,13 @@ namespace SimpleTemplate.ViewModels
         [ObservableProperty]
         private ApplicationTheme? _currentTheme = ThemeManager.Current.ApplicationTheme;
 
-        private ThemeManager _themeManager = ThemeManager.Current;
-
-        public SettingsPageViewModel()
+        partial void OnCurrentThemeChanging(ApplicationTheme? oldValue, ApplicationTheme? newValue)
         {
-            _themeManager.ActualApplicationThemeChanged += OnThemeChanged;
-        }
-
-        private void OnThemeChanged(ThemeManager sender, object args)
-        {
-            UpdateCurrentTheme();
-        }
-
-        public void Dispose()
-        {
-            _themeManager.ActualApplicationThemeChanged -= OnThemeChanged;
-        }
-
-        private void UpdateCurrentTheme()
-        {
-            if (CurrentTheme != ThemeManager.Current.ApplicationTheme)
+            if (ThemeManager.Current.ApplicationTheme != newValue)
             {
-                CurrentTheme = ThemeManager.Current.ApplicationTheme;
+                ThemeManager.Current.ApplicationTheme = newValue;
             }
         }
+
     }
 }

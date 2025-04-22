@@ -8,30 +8,22 @@ namespace SimpleTemplate.Helpers
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is ApplicationTheme.Dark)
+            return value switch
             {
-                return 2;
-            }
-            if (ThemeManager.Current.ApplicationTheme == null)
-            {
-                return 0;
-            }
-
-            return 1;
+                ApplicationTheme.Dark => 2,
+                ApplicationTheme.Light => 1,
+                _ => 0
+            };
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is 2)
+            return value switch
             {
-                ThemeManager.Current.ApplicationTheme = ApplicationTheme.Dark;
-            }
-            else if (value is 1)
-            {
-                ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
-            }
-            else ThemeManager.Current.ApplicationTheme = null;
-            return ThemeManager.Current.ApplicationTheme;
+                2 => ApplicationTheme.Dark,
+                1 => ApplicationTheme.Light,
+                _ => null
+            };
         }
     }
 }
