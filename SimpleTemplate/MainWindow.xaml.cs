@@ -57,7 +57,7 @@ namespace SimpleTemplate
             }
             catch (TaskCanceledException)
             {
-                Debug.WriteLine("Initialize cancled");
+                Debug.WriteLine("Initialize canceled");
             }
             catch (Exception ex)
             {
