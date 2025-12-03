@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using iNKORE.UI.WPF.Modern.Controls;
+﻿using iNKORE.UI.WPF.Modern.Controls;
 using SimpleTemplate.Contracts.Services;
+using System.Diagnostics;
 using NavigationView = iNKORE.UI.WPF.Modern.Controls.NavigationView;
 
 namespace SimpleTemplate.Services

@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
-using System.Windows;
-using SimpleTemplate.Contracts.Services;
+﻿using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.ViewModels;
 using SimpleTemplate.Views;
+using System.Diagnostics;
+using System.Windows;
 
 namespace SimpleTemplate
 {

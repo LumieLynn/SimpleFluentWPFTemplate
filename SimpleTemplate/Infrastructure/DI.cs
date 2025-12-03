@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.ViewModels;
+using System.Reflection;
 
 namespace SimpleTemplate.Infrastructure
 {

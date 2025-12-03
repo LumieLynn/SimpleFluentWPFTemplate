@@ -1,6 +1,6 @@
-﻿using System.Globalization;
+﻿using iNKORE.UI.WPF.Modern;
+using System.Globalization;
 using System.Windows.Data;
-using iNKORE.UI.WPF.Modern;
 
 namespace SimpleTemplate.Helpers
 {

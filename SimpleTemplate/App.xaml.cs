@@ -1,12 +1,12 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-using System.Windows;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.Infrastructure;
 using SimpleTemplate.Services;
 using SimpleTemplate.Views;
 using SimpleTemplate.Views.ProxyPage;
+using System.Diagnostics;
+using System.Reflection;
+using System.Windows;
 
 namespace SimpleTemplate
 {

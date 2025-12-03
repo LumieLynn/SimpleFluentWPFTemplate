@@ -1,6 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Windows.Media;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace SimpleTemplate.ViewModels
 {

@@ -1,7 +1,7 @@
-﻿using System.Windows.Navigation;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.Views.ProxyPage;
+using System.Windows.Navigation;
 using Frame = iNKORE.UI.WPF.Modern.Controls.Frame;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 

@@ -43,6 +43,7 @@
             Grid.Column="1"
             IsPaneOpen="True"
             PaneTitle="{Binding PaneTitle}"
+            Header="{Binding Header}"
             PaneOpening="NavigationViewControl_PaneOpening"
             PaneClosing="NavigationViewControl_PaneClosing"
             IsTabStop="False"
@@ -51,9 +52,26 @@
             MenuItemsSource="{Binding MenuItems}"
             FooterMenuItemsSource="{Binding FooterItems}"
             IsTitleBarAutoPaddingEnabled="False"
-            Header="{Binding Header}"
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
             Grid.ColumnSpan="2">
+
+            <ui:NavigationView.HeaderTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,-10,0,0"
+                          MaxWidth="1110">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid x:Name="pageTitle"
+                            Background="Transparent">
+                            <TextBlock x:Name="title" 
+                                VerticalAlignment="Center"
+                                Text="{Binding}"/>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </ui:NavigationView.HeaderTemplate>
 
             <FrameworkElement.Resources>
                 <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
@@ -64,7 +82,8 @@
                 Margin="0,15,0,0"
                 CanContentScroll="True">
                 <ui:Frame x:Name="Frame_Main"
-                          Margin="57,0,57,0"/>
+                          Margin="57,0,57,0"
+                          MaxWidth="1050"/>
             </ui:ScrollViewerEx>
         </ui:NavigationView>
     </Grid>

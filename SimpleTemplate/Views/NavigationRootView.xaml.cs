@@ -1,6 +1,6 @@
-﻿using System.Windows;
-using iNKORE.UI.WPF.Modern.Controls;
+﻿using iNKORE.UI.WPF.Modern.Controls;
 using SimpleTemplate.ViewModels;
+using System.Windows;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace SimpleTemplate.Views

@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using iNKORE.UI.WPF.Modern.Common.IconKeys;
 using iNKORE.UI.WPF.Modern.Controls;
 using SimpleTemplate.Contracts.Services;
+using System.Collections.ObjectModel;
 
 namespace SimpleTemplate.ViewModels
 {
