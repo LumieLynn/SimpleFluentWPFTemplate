@@ -12,7 +12,6 @@ namespace SimpleTemplate.Views
         public AboutPageView()
         {
             InitializeComponent();
-            DataContext = App.Current.Services.GetService<AboutPageViewModel>();
         }
     }
 }
