@@ -5,7 +5,6 @@ using SimpleTemplate.Services;
 using SimpleTemplate.Views;
 using SimpleTemplate.Views.ProxyPage;
 using System.Diagnostics;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Markup;
 
@@ -18,6 +17,7 @@ namespace SimpleTemplate
     {
         public IServiceProvider Services { get; }
         public static new App Current => (App)Application.Current;
+        private static List<Type> _discoveredViewModels = new();
 
         public App()
         {
@@ -26,22 +26,25 @@ namespace SimpleTemplate
 
         private static ServiceProvider ConfigureServices()
         {
-            return new ServiceCollection()
+            var services = new ServiceCollection();
+            services
                 // Services
                 .AddSingleton<INavigationService, NavigationService>()
                 .AddSingleton<INavigationViewService, NavigationViewService>()
                 .AddSingleton<IPageService, PageService>()
                 // Pages
                 .AddSingleton<NavigationRootView>()
-                .AddTransient<NavigationProxyPage>()
-                .AddViewModels()
-                // Windows
-                .AddSingleton<MainWindow>()
-                .BuildServiceProvider(new ServiceProviderOptions
-                {
-                    ValidateScopes = true,
-                    ValidateOnBuild = true
-                });
+                .AddTransient<NavigationProxyPage>();
+
+            var result = services.AddViewModels();
+            _discoveredViewModels = result.vmTypes;
+            result.services.AddSingleton<MainWindow>();
+
+            return result.services.BuildServiceProvider(new ServiceProviderOptions
+            {
+                ValidateScopes = true,
+                ValidateOnBuild = true
+            });
         }
 
         protected override async void OnStartup(StartupEventArgs e)
@@ -62,27 +65,18 @@ namespace SimpleTemplate
 
         private static async Task RegisterDataTemplatesAsync()
         {
-            var (assembly, viewTypes) = await Task.Run(() =>
+            var templateTasks = _discoveredViewModels.Select(async vmType =>
             {
-                var asm = Assembly.GetExecutingAssembly();
-                var types = asm.GetTypes()
-                    .Where(t => t.Name.EndsWith("View") && !t.IsAbstract)
-                    .ToList();
-                return (asm, types);
-            });
-
-            var templateTasks = viewTypes.Select(async viewType =>
-            {
-                var vmType = await Task.Run(() =>
+                return await Task.Run(() =>
                 {
-                    if (viewType.Namespace is null)
-                        throw new InvalidOperationException($"View type {viewType.Name} has no namespace");
+                    var viewTypeName = vmType.Name.Replace("ViewModel", "View");
+                    var viewNamespace = vmType.Namespace?.Replace("ViewModels", "Views");
 
-                    var vmTypeName = $"{viewType.Name}Model";
-                    return assembly.GetType($"{viewType.Namespace.Replace("Views", "ViewModels")}.{vmTypeName}");
+                    if (viewNamespace == null) return (vmType, null);
+
+                    var viewType = vmType.Assembly.GetType($"{viewNamespace}.{viewTypeName}");
+                    return (vmType, viewType);
                 });
-
-                return (vmType, viewType);
             });
 
             var results = await Task.WhenAll(templateTasks);
