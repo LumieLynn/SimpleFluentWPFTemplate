@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Contracts.Services;
-using SimpleTemplate.Views.ProxyPage;
 using System.Windows.Navigation;
 using Frame = iNKORE.UI.WPF.Modern.Controls.Frame;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
@@ -9,7 +8,6 @@ namespace SimpleTemplate.Services
 {
     public class NavigationService(IServiceProvider serviceProvider, IPageService pageService) : INavigationService
     {
-        private readonly Dictionary<Type, WeakReference<Page>> _pageCache = new();
         private Frame? _frame;
 
         public event EventHandler? Navigated;
@@ -45,35 +43,30 @@ namespace SimpleTemplate.Services
 
         public bool NavigateTo(string pageKey)
         {
-            var pageType = pageService.GetPageType(pageKey);
-            if (_frame != null)
+            var viewModelType = pageService.GetPageType(pageKey);
+
+            var viewTypeName = viewModelType.FullName?.Replace("ViewModels", "Views").Replace("ViewModel", "View");
+            var viewType = viewModelType.Assembly.GetType(viewTypeName);
+
+            if (viewType != null && _frame != null)
             {
-                var navigated = _frame.Navigate(GetOrCreatePage(pageType));
-                return navigated;
+                var page = Activator.CreateInstance(viewType) as iNKORE.UI.WPF.Modern.Controls.Page;
+                if (page != null)
+                {
+                    page.DataContext = serviceProvider.GetRequiredService(viewModelType);
+
+                    return _frame.Navigate(page);
+                }
             }
 
             return false;
         }
 
-        private Page GetOrCreatePage(Type viewModelType)
-        {
-            if (_pageCache.TryGetValue(viewModelType, out var weakref) && weakref.TryGetTarget(out var cachedPage))
-            {
-                return cachedPage;
-            }
-
-            var newPage = serviceProvider.GetRequiredService<NavigationProxyPage>();
-            newPage.ViewModel = serviceProvider.GetRequiredService(viewModelType);
-
-            _pageCache[viewModelType] = new WeakReference<Page>(newPage);
-            return newPage;
-        }
-
         public object? GetCurrentViewModel()
         {
-            if (_frame != null && _frame.Content is NavigationProxyPage proxyPage)
+            if (_frame?.Content is System.Windows.FrameworkElement element)
             {
-                return proxyPage.ViewModel;
+                return element.DataContext;
             }
 
             return null;

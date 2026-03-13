@@ -15,8 +15,7 @@ namespace SimpleTemplate.Infrastructure
                 .ToList();
             foreach (var type in vmTypes)
             {
-                if (type == typeof(NavigationRootViewModel)) services.AddSingleton(type);
-                else services.AddTransient(type);
+                services.AddSingleton(type);
             }
             return (services, vmTypes);
         }

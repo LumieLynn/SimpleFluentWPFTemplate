@@ -3,7 +3,6 @@ using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.Infrastructure;
 using SimpleTemplate.Services;
 using SimpleTemplate.Views;
-using SimpleTemplate.Views.ProxyPage;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Markup;
@@ -33,8 +32,7 @@ namespace SimpleTemplate
                 .AddSingleton<INavigationViewService, NavigationViewService>()
                 .AddSingleton<IPageService, PageService>()
                 // Pages
-                .AddSingleton<NavigationRootView>()
-                .AddTransient<NavigationProxyPage>();
+                .AddSingleton<NavigationRootView>();
 
             var result = services.AddViewModels();
             _discoveredViewModels = result.vmTypes;
