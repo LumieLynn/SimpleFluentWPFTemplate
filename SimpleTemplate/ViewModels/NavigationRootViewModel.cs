@@ -11,8 +11,8 @@ namespace SimpleTemplate.ViewModels
     [RegisterView(typeof(NavigationRootView), viewLifetime: ServiceLifetime.Singleton, viewModelLifetime:ServiceLifetime.Singleton)]
     public partial class NavigationRootViewModel : ObservableRecipient
     {
+        private readonly SynchronizationContext? _syncContext = SynchronizationContext.Current;
         private readonly INavigationService _navigationService;
-        private readonly INavigationViewService _navigationViewService;
         private readonly IMenuConfigurationService _menuConfigurationService;
 
         [ObservableProperty]
@@ -40,12 +40,10 @@ namespace SimpleTemplate.ViewModels
 
         public NavigationRootViewModel(
             INavigationService navigationService,
-            INavigationViewService navigationViewService,
             IMenuConfigurationService menuConfigurationService)
         {
             _navigationService = navigationService;
             _navigationService.Navigated += OnNavigated;
-            _navigationViewService = navigationViewService;
             _menuConfigurationService = menuConfigurationService;
 
         }
@@ -59,13 +57,12 @@ namespace SimpleTemplate.ViewModels
         {
             var (main, footer) = await _menuConfigurationService.GetMenuConfigAsync();
 
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            _syncContext?.Post(_ =>
             {
                 MenuConfigs = new ObservableCollection<MenuConfigItem>(main);
                 FooterConfigs = new ObservableCollection<MenuConfigItem>(footer);
-
                 MenuLoaded?.Invoke();
-            });
+            }, null);
         }
 
         private void OnNavigated(object? sender, EventArgs e)
