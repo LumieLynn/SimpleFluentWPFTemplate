@@ -32,6 +32,7 @@ namespace SimpleTemplate
                 .AddSingleton<INavigationService, NavigationService>()
                 .AddSingleton<INavigationViewService, NavigationViewService>()
                 .AddSingleton<IMenuConfigurationService, MenuConfigurationService>()
+                .AddSingleton<IMenuDefinition, Configurations.NavigationMenu>()
                 .AddSingleton<IViewFactory, ViewFactory>()
 
                 .AddAppComponents()
