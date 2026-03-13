@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using SimpleTemplate.Infrastructure;
+using SimpleTemplate.Views;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 
 namespace SimpleTemplate.ViewModels
 {
+    [RegisterView(typeof(AppsPageView))]
     public partial class AppsPageViewModel : ObservableRecipient
     {
         [ObservableProperty]

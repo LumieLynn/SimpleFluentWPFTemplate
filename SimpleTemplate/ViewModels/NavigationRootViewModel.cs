@@ -1,12 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Contracts.Services;
+using SimpleTemplate.Infrastructure;
 using SimpleTemplate.Models;
+using SimpleTemplate.Views;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Text.Json;
 
 namespace SimpleTemplate.ViewModels
 {
+    [RegisterView(typeof(NavigationRootView), ServiceLifetime.Singleton)]
     public partial class NavigationRootViewModel : ObservableRecipient
     {
         private readonly INavigationService _navigationService;
@@ -37,7 +39,7 @@ namespace SimpleTemplate.ViewModels
         public event Action? MenuLoaded;
 
         public NavigationRootViewModel(
-            INavigationService navigationService, 
+            INavigationService navigationService,
             INavigationViewService navigationViewService,
             IMenuConfigurationService menuConfigurationService)
         {

@@ -3,6 +3,7 @@ using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.Infrastructure;
 using SimpleTemplate.Services;
 using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 
 namespace SimpleTemplate
@@ -45,11 +46,11 @@ namespace SimpleTemplate
             foreach (var vmType in vmResult.vmTypes)
             {
                 var vmFullName = vmType.FullName ?? string.Empty;
-                var viewTypeName = vmFullName.Replace(".ViewModels.", ".Views.").Replace("ViewModel", "View");
-                var viewType = vmType.Assembly.GetType(viewTypeName);
+                var attribute = vmType.GetCustomAttribute<RegisterViewAttribute>();
 
-                if (viewType != null)
+                if (attribute != null)
                 {
+                    var viewType = attribute.ViewType;
                     pageService.ConfigurePage(vmFullName, vmType, viewType);
                 }
                 else

@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SimpleTemplate.ViewModels;
-using SimpleTemplate.Views;
 using System.Reflection;
 
 namespace SimpleTemplate.Infrastructure
@@ -16,18 +14,22 @@ namespace SimpleTemplate.Infrastructure
             foreach (var type in allTypes)
             {
                 if (!type.IsClass || type.IsAbstract) continue;
-                
-                if (type.Name.EndsWith("ViewModel"))
+
+                var registerAttr = type.GetCustomAttribute<RegisterViewAttribute>();
+                if (registerAttr != null)
                 {
                     vmTypes.Add(type);
                     services.AddSingleton(type);
-                }
-                else if (type.Name.EndsWith("View"))
-                {
-                    services.AddSingleton(type);
+
+                    var viewDescriptor = new ServiceDescriptor(
+                        registerAttr.ViewType,
+                        registerAttr.ViewType,
+                        registerAttr.ViewLifetime);
+
+                    services.Add(viewDescriptor);
                 }
             }
-            
+
             return (services, vmTypes);
         }
     }

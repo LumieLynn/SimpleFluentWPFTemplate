@@ -1,31 +1,28 @@
 ﻿using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.Models;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace SimpleTemplate.Services
 {
     public class MenuConfigurationService : IMenuConfigurationService
     {
-        private const string MenuConfigFile = "Assets/menu.json";
+        private static readonly string BaseDir = AppDomain.CurrentDomain.BaseDirectory;
+
+        private static readonly string MenuConfigFilePath = Path.Combine(BaseDir, "Assets", "menu.json");
 
         public async Task<(IEnumerable<MenuConfigItem> Main, IEnumerable<MenuConfigItem> Footer)> GetMenuConfigAsync()
         {
             try
             {
-                if (!File.Exists(MenuConfigFile))
+                if (!File.Exists(MenuConfigFilePath))
                 {
-                    Debug.WriteLine($"[Configuration Error] Can't find Menu Configuration File: {MenuConfigFile}");
+                    Debug.WriteLine($"[Configuration Error] Can't find Menu Configuration File: {MenuConfigFilePath}");
                     return (Enumerable.Empty<MenuConfigItem>(), Enumerable.Empty<MenuConfigItem>());
                 }
 
-                using var stream = File.OpenRead(MenuConfigFile);
+                using var stream = File.OpenRead(MenuConfigFilePath);
                 using var doc = await JsonDocument.ParseAsync(stream);
 
                 var main = doc.RootElement.GetProperty("Main").Deserialize<List<MenuConfigItem>>();

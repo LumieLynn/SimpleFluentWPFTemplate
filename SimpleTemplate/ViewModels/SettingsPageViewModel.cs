@@ -1,8 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using iNKORE.UI.WPF.Modern;
+using SimpleTemplate.Infrastructure;
+using SimpleTemplate.Views;
 
 namespace SimpleTemplate.ViewModels
 {
+    [RegisterView(typeof(SettingsPageView))]
     public partial class SettingsPageViewModel : ObservableRecipient
     {
         [ObservableProperty]
