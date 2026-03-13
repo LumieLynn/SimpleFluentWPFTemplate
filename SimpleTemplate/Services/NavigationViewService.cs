@@ -1,21 +1,20 @@
 ﻿using iNKORE.UI.WPF.Modern.Controls;
 using SimpleTemplate.Contracts.Services;
+using SimpleTemplate.ViewModels;
 using NavigationView = iNKORE.UI.WPF.Modern.Controls.NavigationView;
 
 namespace SimpleTemplate.Services
 {
-    public class NavigationViewService(INavigationService navigationService, IPageService pageService, INavigationService _navigationService) : INavigationViewService
+    public class NavigationViewService(INavigationService navigationService) : INavigationViewService
     {
         private NavigationView? _navigationView;
-
-        //private readonly Dictionary<Type, NavigationViewItem> typeItemPairs = new();
 
         public void Initialize(NavigationView navigationView)
         {
             _navigationView = navigationView;
             _navigationView.BackRequested += OnBackRequested;
             _navigationView.ItemInvoked += OnItemInvoked;
-            _navigationService.Navigated += OnNavigated;
+            navigationService.Navigated += OnNavigated;
         }
 
         private void OnBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) => navigationService.GoBack();
@@ -25,7 +24,7 @@ namespace SimpleTemplate.Services
             if (args.IsSettingsInvoked)
             {
                 // 如果开启了自带的设置按钮，可以跳转到固定的 SettingsPageViewModel
-                _navigationService.NavigateTo("SimpleTemplate.ViewModels.SettingsPageViewModel");
+                navigationService.NavigateTo(typeof(SettingsPageViewModel).FullName);
                 return;
             }
 
@@ -33,7 +32,7 @@ namespace SimpleTemplate.Services
             // 直接读取在 View 中绑定好的 Tag
             if (item?.Tag is string pageKey)
             {
-                _navigationService.NavigateTo(pageKey);
+                navigationService.NavigateTo(pageKey);
             }
         }
 
@@ -43,7 +42,7 @@ namespace SimpleTemplate.Services
             if (_navigationView == null) return;
 
             // 获取当前导航到的 ViewModel 的完整类名（即 PageKey）
-            var currentVmType = _navigationService.GetCurrentViewModel()?.GetType().FullName;
+            var currentVmType = navigationService.GetCurrentViewModel()?.GetType().FullName;
             if (currentVmType == null) return;
 
             // 1. 尝试在主菜单树中查找匹配的 Item

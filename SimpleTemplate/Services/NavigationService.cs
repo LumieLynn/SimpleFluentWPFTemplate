@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Contracts.Services;
+using System.Diagnostics;
 using System.Windows.Navigation;
 using Frame = iNKORE.UI.WPF.Modern.Controls.Frame;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace SimpleTemplate.Services
 {
-    public class NavigationService(IServiceProvider serviceProvider, IPageService pageService) : INavigationService
+    public class NavigationService(IServiceProvider serviceProvider, IPageService pageService) : INavigationService, IDisposable
     {
         private Frame? _frame;
 
@@ -14,6 +15,11 @@ namespace SimpleTemplate.Services
 
         public void Initialize(Frame frame, string? pageKey = null)
         {
+            if (_frame != null)
+            {
+                _frame.Navigated -= OnNavigated;
+            }
+
             _frame = frame;
             frame.Navigated += OnNavigated;
             if (pageKey != null)
@@ -45,18 +51,31 @@ namespace SimpleTemplate.Services
         {
             var viewModelType = pageService.GetPageType(pageKey);
 
-            var viewTypeName = viewModelType.FullName?.Replace("ViewModels", "Views").Replace("ViewModel", "View");
+            var vmFullName = viewModelType.FullName ?? string.Empty;
+            var viewTypeName = vmFullName
+                .Replace(".ViewModels.", ".Views.")
+                .Replace("ViewModel", "View");
+
             var viewType = viewModelType.Assembly.GetType(viewTypeName);
 
-            if (viewType != null && _frame != null)
+            if (viewType == null)
             {
-                var page = serviceProvider.GetRequiredService(viewType) as Page;
+                Debug.WriteLine($"[Navigation Error] 无法找到 View 类型: {viewTypeName} (对应的 ViewModel: {vmFullName})");
+                return false;
+            }
+
+            if (_frame != null)
+            {
+                var page = serviceProvider.GetService(viewType) as Page;
 
                 if (page != null)
                 {
                     page.DataContext = serviceProvider.GetRequiredService(viewModelType);
-
                     return _frame.Navigate(page);
+                }
+                else
+                {
+                    Debug.WriteLine($"[Navigation Error] 无法实例化 View: {viewTypeName}，请检查是否在 DI 中注册或它是否继承自 Page。");
                 }
             }
 
@@ -71,6 +90,16 @@ namespace SimpleTemplate.Services
             }
 
             return null;
+        }
+
+        public void Dispose()
+        {
+            if (_frame != null)
+            {
+                _frame.Navigated -= OnNavigated;
+                _frame = null;
+            }
+            GC.SuppressFinalize(this);
         }
     }
 }

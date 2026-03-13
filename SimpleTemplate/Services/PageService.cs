@@ -17,7 +17,7 @@ namespace SimpleTemplate.Services
 
         public void ConfigurePages(string PageKey, Type PageType)
         {
-            _pages.Add(PageKey, PageType);
+            _pages.TryAdd(PageKey, PageType);
         }
 
     }

@@ -23,9 +23,17 @@ namespace SimpleTemplate.Views
         {
             if (DataContext is NavigationRootViewModel vm)
             {
-                // 动态构建主菜单和底部菜单
-                BuildNavigationMenu(vm.MenuConfigs, NavigationViewControl.MenuItems);
-                BuildNavigationMenu(vm.FooterConfigs, NavigationViewControl.FooterMenuItems);
+                vm.MenuLoaded += () =>
+                {
+                    BuildNavigationMenu(vm.MenuConfigs, NavigationViewControl.MenuItems);
+                    BuildNavigationMenu(vm.FooterConfigs, NavigationViewControl.FooterMenuItems);
+                };
+
+                if (vm.MenuConfigs.Count > 0)
+                {
+                    BuildNavigationMenu(vm.MenuConfigs, NavigationViewControl.MenuItems);
+                    BuildNavigationMenu(vm.FooterConfigs, NavigationViewControl.FooterMenuItems);
+                }
 
                 NavigationViewControl.SelectionChanged += (s, args) =>
                 {
