@@ -7,6 +7,7 @@ using SimpleTemplate.Views.ProxyPage;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Markup;
 
 namespace SimpleTemplate
 {
@@ -103,11 +104,17 @@ namespace SimpleTemplate
 
         private static DataTemplate CreateDataTemplate(Type vmType, Type viewType)
         {
-            return new DataTemplate
-            {
-                DataType = vmType,
-                VisualTree = new FrameworkElementFactory(viewType)
-            };
+            string xaml = $@"
+            <DataTemplate DataType=""{{x:Type vm:{vmType.Name}}}""
+                          xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                          xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
+                          xmlns:vm=""clr-namespace:{vmType.Namespace};assembly={vmType.Assembly.GetName().Name}""
+                          xmlns:v=""clr-namespace:{viewType.Namespace};assembly={viewType.Assembly.GetName().Name}"">
+                <v:{viewType.Name} />
+            </DataTemplate>";
+
+            var template = (DataTemplate)XamlReader.Parse(xaml);
+            return template;
         }
     }
 
