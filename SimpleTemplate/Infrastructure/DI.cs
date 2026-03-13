@@ -7,34 +7,34 @@ namespace SimpleTemplate.Infrastructure
 {
     public static class DI
     {
-        public static (IServiceCollection services, List<Type> vmTypes) AddViewModels(this IServiceCollection services)
+        public static (IServiceCollection services, List<Type> vmTypes) AddAppComponents(this IServiceCollection services)
         {
-            // Auto register all ViewModels
-            var vmTypes = Assembly.GetExecutingAssembly()
-                .GetTypes()
-                .Where(t => t.IsClass && t.Name.EndsWith("ViewModel"))
-                .ToList();
-            foreach (var type in vmTypes)
-            {
-                if (type == typeof(NavigationRootViewModel)) services.AddSingleton(type);
-                else services.AddTransient(type);
-            }
-            return (services, vmTypes);
-        }
+            var vmTypes = new List<Type>();
 
-        public static (IServiceCollection services, List<Type> vmTypes) AddViews(this IServiceCollection services)
-        {
-            // Auto register all Views
-            var viewTypes = Assembly.GetExecutingAssembly()
-                .GetTypes()
-                .Where(t => t.IsClass && t.Name.EndsWith("View"))
-                .ToList();
-            foreach (var type in viewTypes)
+            var allTypes = Assembly.GetExecutingAssembly().GetTypes();
+
+            foreach (var type in allTypes)
             {
-                if (type == typeof(NavigationRootView)) services.AddSingleton(type);
-                else services.AddTransient(type);
+                if (!type.IsClass || type.IsAbstract) continue;
+                
+                if (type.Name.EndsWith("ViewModel"))
+                {
+                    vmTypes.Add(type);
+                    if (type == typeof(NavigationRootViewModel))
+                        services.AddSingleton(type);
+                    else
+                        services.AddTransient(type);
+                }
+                else if (type.Name.EndsWith("View"))
+                {
+                    if (type == typeof(NavigationRootView))
+                        services.AddSingleton(type);
+                    else
+                        services.AddTransient(type);
+                }
             }
-            return (services, viewTypes);
+            
+            return (services, vmTypes);
         }
     }
 }

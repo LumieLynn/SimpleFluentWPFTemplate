@@ -14,7 +14,6 @@ namespace SimpleTemplate
     {
         public IServiceProvider Services { get; }
         public static new App Current => (App)Application.Current;
-        private static List<Type> _discoveredViewModels = new();
 
         public App()
         {
@@ -25,31 +24,30 @@ namespace SimpleTemplate
         {
             var services = new ServiceCollection();
 
-            var pageService = new PageService();
+            //var pageService = new PageService();
 
             services
                 // Services
                 .AddSingleton<INavigationService, NavigationService>()
                 .AddSingleton<INavigationViewService, NavigationViewService>()
-                .AddSingleton<IPageService>(pageService)
+                .AddSingleton<IPageService, PageService>()
                 .AddSingleton<IMenuConfigurationService, MenuConfigurationService>();
 
-            var vmResult = services.AddViewModels();
-            var viewResult = services.AddViews();
-            _discoveredViewModels = vmResult.vmTypes;
+            var vmResult = services.AddAppComponents();
+            services.AddSingleton<MainWindow>();
 
+            var provider = services.BuildServiceProvider(new ServiceProviderOptions
+            {
+                ValidateScopes = true,
+                ValidateOnBuild = true
+            });
+            var pageService = provider.GetRequiredService<IPageService>();
             foreach (var vmType in vmResult.vmTypes)
             {
                 pageService.ConfigurePages(vmType.FullName!, vmType);
             }
 
-            services.AddSingleton<MainWindow>();
-
-            return services.BuildServiceProvider(new ServiceProviderOptions
-            {
-                ValidateScopes = true,
-                ValidateOnBuild = true
-            });
+            return provider;
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -57,7 +55,6 @@ namespace SimpleTemplate
             base.OnStartup(e);
             try
             {
-                RegisterDataTemplates();
                 var mainWindow = Services.GetRequiredService<MainWindow>();
                 mainWindow.Show();
             }
@@ -68,37 +65,6 @@ namespace SimpleTemplate
             }
         }
 
-        private static void RegisterDataTemplates()
-        {
-            foreach (var vmType in _discoveredViewModels)
-            {
-                var viewTypeName = vmType.Name.Replace("ViewModel", "View");
-                var viewNamespace = vmType.Namespace?.Replace("ViewModels", "Views");
-
-                if (viewNamespace == null) continue;
-
-                var viewType = vmType.Assembly.GetType($"{viewNamespace}.{viewTypeName}");
-
-                if (viewType != null)
-                {
-                    var template = CreateDataTemplate(vmType, viewType);
-                    Application.Current.Resources.Add(new DataTemplateKey(vmType), template);
-                    Debug.WriteLine($"Registered DataTemplate: {vmType.Name} -> {viewType.Name}");
-                }
-                else
-                {
-                    Debug.WriteLine($"Warning: View for {vmType.Name} not found");
-                }
-            }
-        }
-
-        private static DataTemplate CreateDataTemplate(Type vmType, Type viewType)
-        {
-            return new DataTemplate(vmType)
-            {
-                VisualTree = new FrameworkElementFactory(viewType)
-            };
-        }
     }
 
 }
