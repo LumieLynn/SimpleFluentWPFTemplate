@@ -49,8 +49,6 @@
             IsTabStop="False"
             IsBackEnabled="{Binding IsBackEnabled}"
             SelectedItem="{Binding Selected, Mode=TwoWay}"
-            MenuItemsSource="{Binding MenuItems}"
-            FooterMenuItemsSource="{Binding FooterItems}"
             IsTitleBarAutoPaddingEnabled="False"
             DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
             Grid.ColumnSpan="2">

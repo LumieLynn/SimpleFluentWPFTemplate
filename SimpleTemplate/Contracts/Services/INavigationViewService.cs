@@ -4,10 +4,8 @@ namespace SimpleTemplate.Contracts.Services
 {
     public interface INavigationViewService
     {
-        void Initialize(NavigationView navigationView, IEnumerable<object>? menuItems, IEnumerable<object>? footerItems);
+        void Initialize(NavigationView navigationView);
 
-        void ConfigurePairs(IEnumerable<object> items);
-
-        NavigationViewItem? GetCurrentSelectedItem();
+        //NavigationViewItem? GetCurrentSelectedItem();
     }
 }

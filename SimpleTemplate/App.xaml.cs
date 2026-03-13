@@ -2,10 +2,8 @@
 using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.Infrastructure;
 using SimpleTemplate.Services;
-using SimpleTemplate.Views;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Markup;
 
 namespace SimpleTemplate
 {
@@ -26,18 +24,30 @@ namespace SimpleTemplate
         private static ServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
+
+            // 1. 先实例化 PageService
+            var pageService = new PageService();
+
             services
                 // Services
                 .AddSingleton<INavigationService, NavigationService>()
                 .AddSingleton<INavigationViewService, NavigationViewService>()
-                .AddSingleton<IPageService, PageService>()
-                // Pages
-                .AddSingleton<NavigationRootView>();
+                .AddSingleton<IPageService>(pageService); // 把实例注册进去
 
+            // 2. 自动注册 ViewModels 和 Views
             var vmResult = services.AddViewModels();
             var viewResult = services.AddViews();
             _discoveredViewModels = vmResult.vmTypes;
-            vmResult.services.AddSingleton<MainWindow>();
+
+            // 3. 把反射找到的 ViewModel 全部注册进 PageService 的字典里
+            foreach (var vmType in vmResult.vmTypes)
+            {
+                // 使用类型的 FullName 作为 Key，例如 "SimpleTemplate.ViewModels.HomePageViewModel"
+                pageService.ConfigurePages(vmType.FullName!, vmType);
+            }
+
+            // MainWindow 单独注册
+            services.AddSingleton<MainWindow>();
 
             return services.BuildServiceProvider(new ServiceProviderOptions
             {

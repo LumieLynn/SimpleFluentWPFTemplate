@@ -67,7 +67,7 @@ namespace SimpleTemplate
 
         private async Task<Task> InitializationNavigationAsync(CancellationToken token)
         {
-            _navViewService.Initialize(_rootView.NavigationViewControl, _rootVM.MenuItems, _rootVM.FooterItems);
+            _navViewService.Initialize(_rootView.NavigationViewControl);
             var pageType = typeof(HomePageViewModel);
             var pageKey = pageType.FullName!;
             _navService.Initialize(_rootView.Frame_Main, pageKey);

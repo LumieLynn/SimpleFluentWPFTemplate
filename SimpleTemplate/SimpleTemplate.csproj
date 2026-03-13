@@ -16,11 +16,15 @@
 
   <ItemGroup>
     <None Remove="Assets\iNKORE_logo.png" />
+    <None Remove="Assets\menu.json" />
     <None Remove="Assets\WpfLibrary_Minimal_64w.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\AppLogo.ico" />
+    <Content Include="Assets\menu.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
