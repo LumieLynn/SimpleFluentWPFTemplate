@@ -44,7 +44,18 @@ namespace SimpleTemplate
             var pageService = provider.GetRequiredService<IPageService>();
             foreach (var vmType in vmResult.vmTypes)
             {
-                pageService.ConfigurePages(vmType.FullName!, vmType);
+                var vmFullName = vmType.FullName ?? string.Empty;
+                var viewTypeName = vmFullName.Replace(".ViewModels.", ".Views.").Replace("ViewModel", "View");
+                var viewType = vmType.Assembly.GetType(viewTypeName);
+
+                if (viewType != null)
+                {
+                    pageService.ConfigurePage(vmFullName, vmType, viewType);
+                }
+                else
+                {
+                    Debug.WriteLine($"[Warning] Could not find the corresponding View for {vmFullName}. Please check the naming conventions.");
+                }
             }
 
             return provider;

@@ -19,29 +19,23 @@ namespace SimpleTemplate.Services
         {
             try
             {
-                // 1. 检查文件是否存在，防止程序启动直接崩溃
                 if (!File.Exists(MenuConfigFile))
                 {
-                    Debug.WriteLine($"[Configuration Error] 找不到菜单配置文件: {MenuConfigFile}");
+                    Debug.WriteLine($"[Configuration Error] Can't find Menu Configuration File: {MenuConfigFile}");
                     return (Enumerable.Empty<MenuConfigItem>(), Enumerable.Empty<MenuConfigItem>());
                 }
 
-                // 2. 异步读取并解析 JSON，避免阻塞 UI 线程
                 using var stream = File.OpenRead(MenuConfigFile);
                 using var doc = await JsonDocument.ParseAsync(stream);
 
-                var mainJson = doc.RootElement.GetProperty("Main").GetRawText();
-                var footerJson = doc.RootElement.GetProperty("Footer").GetRawText();
-
-                var main = JsonSerializer.Deserialize<List<MenuConfigItem>>(mainJson);
-                var footer = JsonSerializer.Deserialize<List<MenuConfigItem>>(footerJson);
+                var main = doc.RootElement.GetProperty("Main").Deserialize<List<MenuConfigItem>>();
+                var footer = doc.RootElement.GetProperty("Footer").Deserialize<List<MenuConfigItem>>();
 
                 return (main ?? Enumerable.Empty<MenuConfigItem>(), footer ?? Enumerable.Empty<MenuConfigItem>());
             }
             catch (Exception ex)
             {
-                // 捕获 JSON 格式错误或其他不可预知的 IO 异常
-                Debug.WriteLine($"[Configuration Error] 解析菜单配置失败: {ex.Message}");
+                Debug.WriteLine($"[Configuration Error] Failed to parse menu configurations: {ex.Message}");
                 return (Enumerable.Empty<MenuConfigItem>(), Enumerable.Empty<MenuConfigItem>());
             }
         }

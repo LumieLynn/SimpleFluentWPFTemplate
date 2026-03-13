@@ -5,7 +5,7 @@ using NavigationView = iNKORE.UI.WPF.Modern.Controls.NavigationView;
 
 namespace SimpleTemplate.Services
 {
-    public class NavigationViewService(INavigationService navigationService) : INavigationViewService
+    public class NavigationViewService(INavigationService navigationService) : INavigationViewService, IDisposable
     {
         private NavigationView? _navigationView;
 
@@ -23,13 +23,11 @@ namespace SimpleTemplate.Services
         {
             if (args.IsSettingsInvoked)
             {
-                // 如果开启了自带的设置按钮，可以跳转到固定的 SettingsPageViewModel
                 navigationService.NavigateTo(typeof(SettingsPageViewModel).FullName);
                 return;
             }
 
             var item = args.InvokedItemContainer as NavigationViewItem;
-            // 直接读取在 View 中绑定好的 Tag
             if (item?.Tag is string pageKey)
             {
                 navigationService.NavigateTo(pageKey);
@@ -41,24 +39,23 @@ namespace SimpleTemplate.Services
         {
             if (_navigationView == null) return;
 
-            // 获取当前导航到的 ViewModel 的完整类名（即 PageKey）
             var currentVmType = navigationService.GetCurrentViewModel()?.GetType().FullName;
             if (currentVmType == null) return;
 
-            // 1. 尝试在主菜单树中查找匹配的 Item
-            var selectedItem = GetSelectedItem(_navigationView.MenuItems, currentVmType);
-
-            // 2. 如果主菜单没找到，尝试在底部菜单 (FooterMenuItems) 中查找
-            if (selectedItem == null)
+            _navigationView.Dispatcher.InvokeAsync(() =>
             {
-                selectedItem = GetSelectedItem(_navigationView.FooterMenuItems, currentVmType);
-            }
+                var selectedItem = GetSelectedItem(_navigationView.MenuItems, currentVmType);
 
-            // 3. 如果找到了对应的 Item，并且当前选中的不是它，则更新选中状态
-            if (selectedItem != null && _navigationView.SelectedItem != selectedItem)
-            {
-                _navigationView.SelectedItem = selectedItem;
-            }
+                if (selectedItem == null)
+                {
+                    selectedItem = GetSelectedItem(_navigationView.FooterMenuItems, currentVmType);
+                }
+
+                if (selectedItem != null && _navigationView.SelectedItem != selectedItem)
+                {
+                    _navigationView.SelectedItem = selectedItem;
+                }
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private NavigationViewItem? GetSelectedItem(System.Collections.IList items, string targetPageKey)
@@ -67,13 +64,11 @@ namespace SimpleTemplate.Services
             {
                 if (item is NavigationViewItem navItem)
                 {
-                    // 检查当前节点是否匹配
                     if (navItem.Tag is string tag && tag == targetPageKey)
                     {
                         return navItem;
                     }
 
-                    // 如果当前节点有子菜单，递归进入子菜单查找
                     if (navItem.MenuItemsSource is System.Collections.IList children)
                     {
                         var childMatch = GetSelectedItem(children, targetPageKey);
@@ -85,6 +80,24 @@ namespace SimpleTemplate.Services
                 }
             }
             return null;
+        }
+
+        public void Dispose()
+        {
+            if (_navigationView != null)
+            {
+                _navigationView.BackRequested -= OnBackRequested;
+                _navigationView.ItemInvoked -= OnItemInvoked;
+
+                _navigationView = null;
+            }
+
+            if (navigationService != null)
+            {
+                navigationService.Navigated -= OnNavigated;
+            }
+
+            GC.SuppressFinalize(this);
         }
     }
 }

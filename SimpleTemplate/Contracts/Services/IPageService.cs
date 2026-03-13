@@ -3,8 +3,8 @@
     public interface IPageService
     {
         Type GetPageType(string key);
-
-        void ConfigurePages(string PageKey, Type PageType);
+        Type GetViewType(string key);
+        void ConfigurePage(string PageKey, Type vmType, Type viewType);
 
     }
 }

@@ -20,17 +20,11 @@ namespace SimpleTemplate.Infrastructure
                 if (type.Name.EndsWith("ViewModel"))
                 {
                     vmTypes.Add(type);
-                    if (type == typeof(NavigationRootViewModel))
-                        services.AddSingleton(type);
-                    else
-                        services.AddTransient(type);
+                    services.AddSingleton(type);
                 }
                 else if (type.Name.EndsWith("View"))
                 {
-                    if (type == typeof(NavigationRootView))
-                        services.AddSingleton(type);
-                    else
-                        services.AddTransient(type);
+                    services.AddSingleton(type);
                 }
             }
             

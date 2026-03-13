@@ -4,20 +4,25 @@ namespace SimpleTemplate.Services
 {
     public class PageService : IPageService
     {
-        private readonly Dictionary<string, Type> _pages = new();
+        private readonly Dictionary<string, (Type VmType, Type ViewType)> _pages = new();
 
         public Type GetPageType(string key)
         {
-            if (!_pages.TryGetValue(key, out Type? pageType))
-            {
+            if (!_pages.TryGetValue(key, out var mapping))
                 throw new InvalidOperationException($"Page with key '{key}' not found.");
-            }
-            return pageType;
+            return mapping.VmType;
         }
 
-        public void ConfigurePages(string PageKey, Type PageType)
+        public Type GetViewType(string key)
         {
-            _pages.TryAdd(PageKey, PageType);
+            if (!_pages.TryGetValue(key, out var mapping))
+                throw new InvalidOperationException($"Page with key '{key}' not found.");
+            return mapping.ViewType;
+        }
+
+        public void ConfigurePage(string key, Type vmType, Type viewType)
+        {
+            _pages.TryAdd(key, (vmType, viewType));
         }
 
     }

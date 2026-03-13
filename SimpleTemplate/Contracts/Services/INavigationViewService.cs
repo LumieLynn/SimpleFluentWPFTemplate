@@ -2,10 +2,9 @@
 
 namespace SimpleTemplate.Contracts.Services
 {
-    public interface INavigationViewService
+    public interface INavigationViewService : IDisposable
     {
         void Initialize(NavigationView navigationView);
 
-        //NavigationViewItem? GetCurrentSelectedItem();
     }
 }

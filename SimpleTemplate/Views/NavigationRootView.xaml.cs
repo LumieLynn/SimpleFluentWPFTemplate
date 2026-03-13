@@ -71,16 +71,14 @@ namespace SimpleTemplate.Views
             {
                 var iconType = typeof(SegoeFluentIcons);
 
-                // 尝试获取静态属性 (Property)
+                // try to get the property first (most common case), if not found, try to get the field (some versions of the library might use const or static readonly fields)
                 var propInfo = iconType.GetProperty(config.Icon, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
                 if (propInfo != null)
                 {
-                    // 使用 dynamic 让编译器在运行时自动匹配 Icon 属性的真实类型（通常是 IconKey）
                     item.Icon = new FontIcon { Icon = (dynamic)propInfo.GetValue(null)! };
                 }
                 else
                 {
-                    // 以防库的某些版本是用 const 或 static readonly 字段 (Field) 定义的
                     var fieldInfo = iconType.GetField(config.Icon, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
                     if (fieldInfo != null)
                     {
@@ -89,7 +87,6 @@ namespace SimpleTemplate.Views
                 }
             }
 
-            // 递归处理子菜单
             if (config.Children != null && config.Children.Count > 0)
             {
                 item.MenuItemsSource = config.Children.Select(CreateMenuItem).ToList();

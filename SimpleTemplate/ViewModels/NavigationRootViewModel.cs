@@ -46,7 +46,11 @@ namespace SimpleTemplate.ViewModels
             _navigationViewService = navigationViewService;
             _menuConfigurationService = menuConfigurationService;
 
-            _ = LoadMenuConfigurationsAsync();
+        }
+
+        public async Task InitializeAsync()
+        {
+            await LoadMenuConfigurationsAsync();
         }
 
         private async Task LoadMenuConfigurationsAsync()

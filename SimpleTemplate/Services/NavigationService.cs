@@ -50,19 +50,7 @@ namespace SimpleTemplate.Services
         public bool NavigateTo(string pageKey)
         {
             var viewModelType = pageService.GetPageType(pageKey);
-
-            var vmFullName = viewModelType.FullName ?? string.Empty;
-            var viewTypeName = vmFullName
-                .Replace(".ViewModels.", ".Views.")
-                .Replace("ViewModel", "View");
-
-            var viewType = viewModelType.Assembly.GetType(viewTypeName);
-
-            if (viewType == null)
-            {
-                Debug.WriteLine($"[Navigation Error] 无法找到 View 类型: {viewTypeName} (对应的 ViewModel: {vmFullName})");
-                return false;
-            }
+            var viewType = pageService.GetViewType(pageKey);
 
             if (_frame != null)
             {
@@ -75,7 +63,11 @@ namespace SimpleTemplate.Services
                 }
                 else
                 {
-                    Debug.WriteLine($"[Navigation Error] 无法实例化 View: {viewTypeName}，请检查是否在 DI 中注册或它是否继承自 Page。");
+                    throw new InvalidOperationException(
+                        $"[Navigation Error] Navigation failed! Unable to instantiate View: {viewType.Name}。" +
+                        $"Please check：\n" +
+                        $"Is this View properly registered in DI?\n" +
+                        $"Is its base class iNKORE.UI.WPF.Modern.Controls.Page?");
                 }
             }
 

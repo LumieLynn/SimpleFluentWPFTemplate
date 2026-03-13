@@ -45,14 +45,14 @@ namespace SimpleTemplate
 
         private async Task InitializeAppAsync()
         {
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             try
             {
-                var initializationTask = InitializationNavigationAsync(cts.Token);
-
-                await Task.WhenAll(initializationTask);
+                await _rootVM.InitializeAsync();
 
                 Content = _rootView;
+                await Application.Current.Dispatcher.InvokeAsync(() => { }, System.Windows.Threading.DispatcherPriority.Loaded);
+                await InitializationNavigationAsync(cts.Token);
             }
             catch (TaskCanceledException)
             {
@@ -65,7 +65,7 @@ namespace SimpleTemplate
             }
         }
 
-        private async Task<Task> InitializationNavigationAsync(CancellationToken token)
+        private Task InitializationNavigationAsync(CancellationToken token)
         {
             _navViewService.Initialize(_rootView.NavigationViewControl);
             var pageType = typeof(HomePageViewModel);
