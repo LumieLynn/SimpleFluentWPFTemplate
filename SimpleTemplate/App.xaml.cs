@@ -31,35 +31,16 @@ namespace SimpleTemplate
                 // Services
                 .AddSingleton<INavigationService, NavigationService>()
                 .AddSingleton<INavigationViewService, NavigationViewService>()
-                .AddSingleton<IPageService, PageService>()
-                .AddSingleton<IMenuConfigurationService, MenuConfigurationService>();
+                .AddSingleton<IMenuConfigurationService, MenuConfigurationService>()
 
-            var vmResult = services.AddAppComponents();
-            services.AddSingleton<MainWindow>();
+                .AddAppComponents()
+                .AddSingleton<MainWindow>();
 
-            var provider = services.BuildServiceProvider(new ServiceProviderOptions
+            return services.BuildServiceProvider(new ServiceProviderOptions
             {
                 ValidateScopes = true,
                 ValidateOnBuild = true
             });
-            var pageService = provider.GetRequiredService<IPageService>();
-            foreach (var vmType in vmResult.vmTypes)
-            {
-                var vmFullName = vmType.FullName ?? string.Empty;
-                var attribute = vmType.GetCustomAttribute<RegisterViewAttribute>();
-
-                if (attribute != null)
-                {
-                    var viewType = attribute.ViewType;
-                    pageService.ConfigurePage(vmFullName, vmType, viewType);
-                }
-                else
-                {
-                    Debug.WriteLine($"[Warning] Could not find the corresponding View for {vmFullName}. Please check the naming conventions.");
-                }
-            }
-
-            return provider;
         }
 
         protected override void OnStartup(StartupEventArgs e)

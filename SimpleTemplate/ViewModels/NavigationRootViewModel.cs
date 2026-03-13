@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace SimpleTemplate.ViewModels
 {
-    [RegisterView(typeof(NavigationRootView), ServiceLifetime.Singleton)]
+    [RegisterView(typeof(NavigationRootView), viewLifetime: ServiceLifetime.Singleton, viewModelLifetime:ServiceLifetime.Singleton)]
     public partial class NavigationRootViewModel : ObservableRecipient
     {
         private readonly INavigationService _navigationService;
@@ -61,11 +61,8 @@ namespace SimpleTemplate.ViewModels
 
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
-                MenuConfigs.Clear();
-                foreach (var item in main) MenuConfigs.Add(item);
-
-                FooterConfigs.Clear();
-                foreach (var item in footer) FooterConfigs.Add(item);
+                MenuConfigs = new ObservableCollection<MenuConfigItem>(main);
+                FooterConfigs = new ObservableCollection<MenuConfigItem>(footer);
 
                 MenuLoaded?.Invoke();
             });

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Infrastructure;
 using SimpleTemplate.Views;
 using System.Collections.ObjectModel;
@@ -6,7 +7,7 @@ using System.Windows.Media;
 
 namespace SimpleTemplate.ViewModels
 {
-    [RegisterView(typeof(AppsPageView))]
+    [RegisterView(typeof(AppsPageView), ServiceLifetime.Transient, ServiceLifetime.Singleton)]
     public partial class AppsPageViewModel : ObservableRecipient
     {
         [ObservableProperty]

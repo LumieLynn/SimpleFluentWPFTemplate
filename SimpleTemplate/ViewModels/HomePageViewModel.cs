@@ -1,11 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Infrastructure;
 using SimpleTemplate.Views;
 
 namespace SimpleTemplate.ViewModels
 {
-    [RegisterView(typeof(HomePageView))]
+    [RegisterView(typeof(HomePageView), ServiceLifetime.Transient, ServiceLifetime.Singleton)]
     public partial class HomePageViewModel : ObservableRecipient
     {
         [ObservableProperty]

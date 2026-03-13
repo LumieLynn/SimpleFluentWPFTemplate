@@ -1,15 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SimpleTemplate.Contracts.Services;
+using SimpleTemplate.Services;
 using System.Reflection;
 
 namespace SimpleTemplate.Infrastructure
 {
     public static class DI
     {
-        public static (IServiceCollection services, List<Type> vmTypes) AddAppComponents(this IServiceCollection services)
+        public static IServiceCollection AddAppComponents(this IServiceCollection services)
         {
-            var vmTypes = new List<Type>();
-
             var allTypes = Assembly.GetExecutingAssembly().GetTypes();
+
+            var pageMappings = new List<(string VmFullName, Type VmType, Type ViewType)>();
 
             foreach (var type in allTypes)
             {
@@ -18,19 +20,31 @@ namespace SimpleTemplate.Infrastructure
                 var registerAttr = type.GetCustomAttribute<RegisterViewAttribute>();
                 if (registerAttr != null)
                 {
-                    vmTypes.Add(type);
-                    services.AddSingleton(type);
+                    services.Add(new ServiceDescriptor(type, type, registerAttr.ViewModelLifetime));
 
-                    var viewDescriptor = new ServiceDescriptor(
+                    services.Add(new ServiceDescriptor(
                         registerAttr.ViewType,
                         registerAttr.ViewType,
-                        registerAttr.ViewLifetime);
+                        registerAttr.ViewLifetime));
 
-                    services.Add(viewDescriptor);
+                    if (!string.IsNullOrEmpty(type.FullName))
+                    {
+                        pageMappings.Add((type.FullName, type, registerAttr.ViewType));
+                    }
                 }
             }
 
-            return (services, vmTypes);
+            services.AddSingleton<IPageService>(sp =>
+            {
+                var pageService = new PageService();
+                foreach (var mapping in pageMappings)
+                {
+                    pageService.ConfigurePage(mapping.VmFullName, mapping.VmType, mapping.ViewType);
+                }
+                return pageService;
+            });
+
+            return services;
         }
     }
 }
