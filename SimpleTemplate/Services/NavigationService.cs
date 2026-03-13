@@ -6,7 +6,7 @@ using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace SimpleTemplate.Services
 {
-    public class NavigationService(IServiceProvider serviceProvider, IPageService pageService) : INavigationService, IDisposable
+    public class NavigationService(IViewFactory viewFactory, IPageService pageService) : INavigationService, IDisposable
     {
         private Frame? _frame;
 
@@ -53,11 +53,12 @@ namespace SimpleTemplate.Services
 
             if (_frame != null)
             {
-                var page = serviceProvider.GetService(viewType) as Page;
+                var page = viewFactory.CreateView(viewType);
+                var viewModel = viewFactory.CreateViewModel(viewModelType);
 
                 if (page != null)
                 {
-                    page.DataContext = serviceProvider.GetRequiredService(viewModelType);
+                    page.DataContext = viewModel;
                     return _frame.Navigate(page);
                 }
                 else
