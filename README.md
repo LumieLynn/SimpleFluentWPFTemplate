@@ -1,21 +1,43 @@
-# SimpleFluentWPFTemplate
-A simple Fluent style WPF Template with a NavigationView using 'iUWM'([iNKORE.UI.WPF.Modern](https://github.com/iNKORE-NET/UI.WPF.Modern/)).
+# LumiereWPF
+LumiereWPF is a modern, lightweight WPF template built on the Fluent Design System.
 
-## Feature
-This template utilizes the MVVM architecture, inspired by Template Studio for WinUI, and incorporates IUWM for enhanced FluentUI effects in WPF. It reduces maintenance costs for adding or removing pages while maintaining design consistency. 
+## 🌟 Key Features
+- **Automated DI Registration**: Simply decorate your ViewModels with the `[RegisterView]` attribute. The template automatically scans and registers View/ViewModel pairs with the DI container, managing their lifecycles seamlessly.
+- **Strict MVVM Architecture**: Built with a clean separation of concerns, utilizing dedicated services for Navigation, Page mapping, and Menu configuration.
+- **Modern Fluent UX**: Native integration with [iNKORE.UI.WPF.Modern](https://github.com/iNKORE-NET/UI.WPF.Modern/) (iUWM), offering smooth NavigationView transitions and Windows 11 visual effects like Acrylic and Mica.
 
-## Adding a New Page to NavigationView
-To add a page to the NavigationView component:
+## 🚀 Getting Started
+Adding a new page to LumiereWPF is a streamlined two-step process:
+1. **Define and Register**
+Apply the `[RegisterView]` attribute to your ViewModel to specify its paired View and DI lifetime (e.g., Transient or Singleton).
+```csharp
+[RegisterView(typeof(MyPageView), ServiceLifetime.Transient)]
+public partial class MyPageViewModel : ObservableObject 
+{ 
+    // Your business logic here
+}
+```
+2. **Configure the Menu**
+Define your navigation hierarchy in Configurations/NavigationMenu.cs.
+```csharp
+public (IEnumerable<MenuConfigItem> Main, IEnumerable<MenuConfigItem> Footer) Build()
+{
+    return new LuminaMenuBuilder()
+        .AddItem("Home", "Home", typeof(HomePageViewModel))
+        .AddSeparator()
+        .AddExpandableItem("Features", "Setting", sub => {
+            sub.AddItem("New Page", "Document", typeof(MyPageViewModel));
+        })
+        .Build(); // Generates the menu model for the UI
+}
+```
 
-1. Navigate to the NavigationRootViewModel.cs file in the project;
-2. Create a new NavigationViewItem instance;
-3. Set the Tag property of this NavigationViewItem to the ViewModel type of your target page (e.g., typeof(YourNewPageViewModel));
-4. Add the instance to the navigation items collection (typically the NavigationItems observable collection in the view model).
+## 📂 Project Structure
+- `Infrastructure/`: Contains the automated DI logic and custom attributes.
+- `Configurations/`: The centralized hub for app-wide settings, including the `NavigationMenu.cs` definition.
+- `Services/`: Implementation of core services such as Navigation and Page management.
+- `Models/`: Core data models used for UI rendering and configuration.
 
-This tagging mechanism maps the navigation item to the corresponding page, ensuring the correct page is loaded when the item is selected.
-
-Due to the dependency injection (DI) automatic registration mechanism, when using this template, any newly added Views and ViewModels must follow specific naming conventions: "PageName" + "PageView"/"PageViewModel".
-
-## Credits
+## 🤝 Credits
 - [iNKORE.UI.WPF.Modern](https://github.com/iNKORE-NET/UI.WPF.Modern/)
 - [Microsoft Template Studio](https://github.com/microsoft/TemplateStudio)
