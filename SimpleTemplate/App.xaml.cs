@@ -34,23 +34,24 @@ namespace SimpleTemplate
                 // Pages
                 .AddSingleton<NavigationRootView>();
 
-            var result = services.AddViewModels();
-            _discoveredViewModels = result.vmTypes;
-            result.services.AddSingleton<MainWindow>();
+            var vmResult = services.AddViewModels();
+            var viewResult = services.AddViews();
+            _discoveredViewModels = vmResult.vmTypes;
+            vmResult.services.AddSingleton<MainWindow>();
 
-            return result.services.BuildServiceProvider(new ServiceProviderOptions
+            return services.BuildServiceProvider(new ServiceProviderOptions
             {
                 ValidateScopes = true,
                 ValidateOnBuild = true
             });
         }
 
-        protected override async void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
             try
             {
-                await RegisterDataTemplatesAsync();
+                RegisterDataTemplates();
                 var mainWindow = Services.GetRequiredService<MainWindow>();
                 mainWindow.Show();
             }
@@ -61,27 +62,18 @@ namespace SimpleTemplate
             }
         }
 
-        private static async Task RegisterDataTemplatesAsync()
+        private static void RegisterDataTemplates()
         {
-            var templateTasks = _discoveredViewModels.Select(async vmType =>
+            foreach (var vmType in _discoveredViewModels)
             {
-                return await Task.Run(() =>
-                {
-                    var viewTypeName = vmType.Name.Replace("ViewModel", "View");
-                    var viewNamespace = vmType.Namespace?.Replace("ViewModels", "Views");
+                var viewTypeName = vmType.Name.Replace("ViewModel", "View");
+                var viewNamespace = vmType.Namespace?.Replace("ViewModels", "Views");
 
-                    if (viewNamespace == null) return (vmType, null);
+                if (viewNamespace == null) continue;
 
-                    var viewType = vmType.Assembly.GetType($"{viewNamespace}.{viewTypeName}");
-                    return (vmType, viewType);
-                });
-            });
+                var viewType = vmType.Assembly.GetType($"{viewNamespace}.{viewTypeName}");
 
-            var results = await Task.WhenAll(templateTasks);
-
-            foreach (var (vmType, viewType) in results)
-            {
-                if (vmType != null)
+                if (viewType != null)
                 {
                     var template = CreateDataTemplate(vmType, viewType);
                     Application.Current.Resources.Add(new DataTemplateKey(vmType), template);
@@ -89,24 +81,17 @@ namespace SimpleTemplate
                 }
                 else
                 {
-                    Debug.WriteLine($"Warning：ViewModel for {viewType.Name} not found");
+                    Debug.WriteLine($"Warning: View for {vmType.Name} not found");
                 }
             }
         }
 
         private static DataTemplate CreateDataTemplate(Type vmType, Type viewType)
         {
-            string xaml = $@"
-            <DataTemplate DataType=""{{x:Type vm:{vmType.Name}}}""
-                          xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
-                          xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
-                          xmlns:vm=""clr-namespace:{vmType.Namespace};assembly={vmType.Assembly.GetName().Name}""
-                          xmlns:v=""clr-namespace:{viewType.Namespace};assembly={viewType.Assembly.GetName().Name}"">
-                <v:{viewType.Name} />
-            </DataTemplate>";
-
-            var template = (DataTemplate)XamlReader.Parse(xaml);
-            return template;
+            return new DataTemplate(vmType)
+            {
+                VisualTree = new FrameworkElementFactory(viewType)
+            };
         }
     }
 

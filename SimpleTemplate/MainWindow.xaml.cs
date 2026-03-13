@@ -45,13 +45,12 @@ namespace SimpleTemplate
 
         private async Task InitializeAppAsync()
         {
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(4));
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
             try
             {
                 var initializationTask = InitializationNavigationAsync(cts.Token);
-                var delayTask = Task.Delay(2000, cts.Token);
 
-                await Task.WhenAll(initializationTask, delayTask);
+                await Task.WhenAll(initializationTask);
 
                 Content = _rootView;
             }
@@ -66,13 +65,13 @@ namespace SimpleTemplate
             }
         }
 
-        private async Task InitializationNavigationAsync(CancellationToken token)
+        private async Task<Task> InitializationNavigationAsync(CancellationToken token)
         {
             _navViewService.Initialize(_rootView.NavigationViewControl, _rootVM.MenuItems, _rootVM.FooterItems);
             var pageType = typeof(HomePageViewModel);
             var pageKey = pageType.FullName!;
             _navService.Initialize(_rootView.Frame_Main, pageKey);
-            await Task.Delay(1, token);
+            return Task.CompletedTask;
         }
 
         protected override void OnClosed(EventArgs e)

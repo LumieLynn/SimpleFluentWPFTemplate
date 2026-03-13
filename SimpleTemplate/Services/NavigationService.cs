@@ -50,7 +50,8 @@ namespace SimpleTemplate.Services
 
             if (viewType != null && _frame != null)
             {
-                var page = Activator.CreateInstance(viewType) as iNKORE.UI.WPF.Modern.Controls.Page;
+                var page = serviceProvider.GetRequiredService(viewType) as Page;
+
                 if (page != null)
                 {
                     page.DataContext = serviceProvider.GetRequiredService(viewModelType);
