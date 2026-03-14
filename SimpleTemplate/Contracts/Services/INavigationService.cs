@@ -13,7 +13,7 @@ namespace SimpleTemplate.Contracts.Services
             get;
         }
 
-        bool NavigateTo(string pageKey);
+        bool NavigateTo(string pageKey, object? parameter = null);
 
         bool GoBack();
 

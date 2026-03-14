@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Contracts.Services;
+using SimpleTemplate.Contracts.ViewModels;
 using System.Windows.Navigation;
 using Frame = iNKORE.UI.WPF.Modern.Controls.Frame;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
@@ -29,6 +30,13 @@ namespace SimpleTemplate.Services
 
         private void OnNavigated(object sender, NavigationEventArgs e)
         {
+            if (e.Content is System.Windows.FrameworkElement element)
+            {
+                if (element.DataContext is INavigationAware newVm)
+                {
+                    newVm.OnNavigatedTo(element.Tag);
+                }
+            }
             Navigated?.Invoke(this, e);
         }
 
@@ -36,29 +44,41 @@ namespace SimpleTemplate.Services
 
         public bool GoBack()
         {
-            bool navigated = false;
             if (CanGoBack && _frame != null)
             {
-                _frame.GoBack();
-                navigated = true;
-            }
+                if (GetCurrentViewModel() is INavigationAware oldVm)
+                {
+                    oldVm.OnNavigatedFrom();
+                }
 
-            return navigated;
+                _frame.GoBack();
+                return true;
+            }
+            return false;
         }
 
-        public bool NavigateTo(string pageKey)
+        public bool NavigateTo(string pageKey, object? parameter = null)
         {
             var viewModelType = pageService.GetPageType(pageKey);
             var viewType = pageService.GetViewType(pageKey);
 
             if (_frame != null)
             {
+                if (GetCurrentViewModel() is INavigationAware oldVm)
+                {
+                    oldVm.OnNavigatedFrom();
+                }
+
                 var page = viewFactory.CreateView(viewType);
                 var viewModel = viewFactory.CreateViewModel(viewModelType);
 
                 if (page != null)
                 {
                     page.DataContext = viewModel;
+                    if (viewModel is INavigationAware newNavAware)
+                    {
+                        newNavAware.OnNavigatedTo(parameter);
+                    }
                     return _frame.Navigate(page);
                 }
                 else
