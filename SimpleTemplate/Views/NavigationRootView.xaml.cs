@@ -56,15 +56,18 @@ namespace SimpleTemplate.Views
 
         private object CreateMenuItem(MenuConfigItem config)
         {
-            if (config.Type == "Separator") return new NavigationViewItemSeparator();
-            if (config.Type == "Header") return new NavigationViewItemHeader { Content = config.Title };
+            if (config.Type == MenuItemType.Separator) return new NavigationViewItemSeparator();
+            if (config.Type == MenuItemType.Header) return new NavigationViewItemHeader { Content = config.Title };
+
+            bool hasChildren = config.Children != null && config.Children.Count > 0; 
+            bool defaultSelectable = !hasChildren && !string.IsNullOrEmpty(config.TargetPage);
 
             var item = new NavigationViewItem
             {
                 Content = config.Title,
                 Tag = config.TargetPage, // save PageKey to Tag
                 IsExpanded = config.IsExpanded,
-                SelectsOnInvoked = config.Type == "Item"
+                SelectsOnInvoked = config.IsSelectable ?? defaultSelectable
             };
 
             if (!string.IsNullOrEmpty(config.Icon))
@@ -87,7 +90,7 @@ namespace SimpleTemplate.Views
                 }
             }
 
-            if (config.Children != null && config.Children.Count > 0)
+            if (hasChildren)
             {
                 item.MenuItemsSource = config.Children.Select(CreateMenuItem).ToList();
             }

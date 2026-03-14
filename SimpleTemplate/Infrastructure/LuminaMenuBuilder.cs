@@ -6,27 +6,28 @@ namespace SimpleTemplate.Infrastructure
     {
         private readonly List<MenuConfigItem> _items = new();
 
-        public LuminaMenuBuilder AddItem(string title, string icon, Type viewModelType)
+        public LuminaMenuBuilder AddItem(string title, string icon, Type viewModelType, bool isSelectable = true)
         {
             _items.Add(new MenuConfigItem
             {
-                Type = "Item",
+                Type = MenuItemType.Item,
                 Title = title,
                 Icon = icon,
-                TargetPage = viewModelType.FullName
+                TargetPage = viewModelType.FullName,
+                IsSelectable = isSelectable
             });
             return this;
         }
 
         public LuminaMenuBuilder AddHeader(string title)
         {
-            _items.Add(new MenuConfigItem { Type = "Header", Title = title });
+            _items.Add(new MenuConfigItem { Type = MenuItemType.Item, Title = title });
             return this;
         }
 
         public LuminaMenuBuilder AddSeparator()
         {
-            _items.Add(new MenuConfigItem { Type = "Separator" });
+            _items.Add(new MenuConfigItem { Type = MenuItemType.Separator });
             return this;
         }
 
@@ -37,7 +38,7 @@ namespace SimpleTemplate.Infrastructure
 
             _items.Add(new MenuConfigItem
             {
-                Type = "Item",
+                Type = MenuItemType.Item,
                 Title = title,
                 Icon = icon,
                 IsExpanded = true,
