@@ -81,7 +81,8 @@
                 CanContentScroll="True">
                 <ui:Frame x:Name="Frame_Main"
                           Margin="57,0,57,0"
-                          MaxWidth="1050"/>
+                          MaxWidth="1050"
+                          JournalOwnership="OwnsJournal"/>
             </ui:ScrollViewerEx>
         </ui:NavigationView>
     </Grid>

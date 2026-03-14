@@ -10,6 +10,8 @@ namespace SimpleTemplate.Services
     public class NavigationService(IViewFactory viewFactory, IPageService pageService) : INavigationService, IDisposable
     {
         private Frame? _frame;
+        private string? _currentPageKey;
+        private readonly Stack<string> _backStack = new();
 
         public event EventHandler? Navigated;
 
@@ -22,6 +24,8 @@ namespace SimpleTemplate.Services
 
             _frame = frame;
             frame.Navigated += OnNavigated;
+            _backStack.Clear();
+
             if (pageKey != null)
             {
                 NavigateTo(pageKey);
@@ -40,24 +44,27 @@ namespace SimpleTemplate.Services
             Navigated?.Invoke(this, e);
         }
 
-        public bool CanGoBack => _frame != null && _frame.CanGoBack;
+        public bool CanGoBack => _frame != null && _backStack.Count > 0;
 
         public bool GoBack()
         {
             if (CanGoBack && _frame != null)
             {
-                if (GetCurrentViewModel() is INavigationAware oldVm)
-                {
-                    oldVm.OnNavigatedFrom();
-                }
+                var previousPageKey = _backStack.Pop();
 
-                _frame.GoBack();
-                return true;
+                return NavigateInternal(previousPageKey, null, isBackNavigation: true);
             }
             return false;
         }
 
         public bool NavigateTo(string pageKey, object? parameter = null)
+        {
+            if (_currentPageKey == pageKey) return false;
+
+            return NavigateInternal(pageKey, parameter, isBackNavigation: false);
+        }
+
+        private bool NavigateInternal(string pageKey, object? parameter, bool isBackNavigation)
         {
             var viewModelType = pageService.GetPageType(pageKey);
             var viewType = pageService.GetViewType(pageKey);
@@ -69,28 +76,27 @@ namespace SimpleTemplate.Services
                     oldVm.OnNavigatedFrom();
                 }
 
+                if (!isBackNavigation && _currentPageKey != null)
+                {
+                    _backStack.Push(_currentPageKey);
+                }
+
                 var page = viewFactory.CreateView(viewType);
                 var viewModel = viewFactory.CreateViewModel(viewModelType);
 
                 if (page != null)
                 {
                     page.DataContext = viewModel;
-                    if (viewModel is INavigationAware newNavAware)
+                    _currentPageKey = pageKey;
+
+                    if (viewModel is INavigationAware newVm)
                     {
-                        newNavAware.OnNavigatedTo(parameter);
+                        newVm.OnNavigatedTo(parameter);
                     }
+
                     return _frame.Navigate(page);
                 }
-                else
-                {
-                    throw new InvalidOperationException(
-                        $"[Navigation Error] Navigation failed! Unable to instantiate View: {viewType.Name}。" +
-                        $"Please check：\n" +
-                        $"Is this View properly registered in DI?\n" +
-                        $"Is its base class iNKORE.UI.WPF.Modern.Controls.Page?");
-                }
             }
-
             return false;
         }
 
