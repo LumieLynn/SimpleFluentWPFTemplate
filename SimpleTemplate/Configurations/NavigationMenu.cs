@@ -2,7 +2,6 @@
 using SimpleTemplate.Infrastructure;
 using SimpleTemplate.Models;
 using SimpleTemplate.ViewModels;
-using System.Collections.Generic;
 
 namespace SimpleTemplate.Configurations
 {

@@ -3,7 +3,6 @@ using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.Infrastructure;
 using SimpleTemplate.Services;
 using System.Diagnostics;
-using System.Reflection;
 using System.Windows;
 
 namespace SimpleTemplate

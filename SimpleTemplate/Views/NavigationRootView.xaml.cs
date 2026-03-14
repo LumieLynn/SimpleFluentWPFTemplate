@@ -59,7 +59,7 @@ namespace SimpleTemplate.Views
             if (config.Type == MenuItemType.Separator) return new NavigationViewItemSeparator();
             if (config.Type == MenuItemType.Header) return new NavigationViewItemHeader { Content = config.Title };
 
-            bool hasChildren = config.Children != null && config.Children.Count > 0; 
+            bool hasChildren = config.Children != null && config.Children.Count > 0;
             bool defaultSelectable = !hasChildren && !string.IsNullOrEmpty(config.TargetPage);
 
             var item = new NavigationViewItem

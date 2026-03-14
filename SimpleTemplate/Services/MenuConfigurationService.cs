@@ -1,8 +1,5 @@
 ﻿using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.Models;
-using System.Diagnostics;
-using System.IO;
-using System.Text.Json;
 
 namespace SimpleTemplate.Services
 {

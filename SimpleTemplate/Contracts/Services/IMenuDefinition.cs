@@ -1,5 +1,4 @@
 ﻿using SimpleTemplate.Models;
-using System.Collections.Generic;
 
 namespace SimpleTemplate.Contracts.Services
 {

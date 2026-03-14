@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace SimpleTemplate.ViewModels
 {
-    [RegisterView(typeof(NavigationRootView), viewLifetime: ServiceLifetime.Singleton, viewModelLifetime:ServiceLifetime.Singleton)]
+    [RegisterView(typeof(NavigationRootView), viewLifetime: ServiceLifetime.Singleton, viewModelLifetime: ServiceLifetime.Singleton)]
     public partial class NavigationRootViewModel : ObservableRecipient
     {
         private readonly SynchronizationContext? _syncContext = SynchronizationContext.Current;
