@@ -21,7 +21,7 @@ namespace SimpleTemplate.Infrastructure
 
         public LuminaMenuBuilder AddHeader(string title)
         {
-            _items.Add(new MenuConfigItem { Type = MenuItemType.Item, Title = title });
+            _items.Add(new MenuConfigItem { Type = MenuItemType.Header, Title = title });
             return this;
         }
 
