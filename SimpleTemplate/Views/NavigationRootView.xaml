@@ -76,13 +76,9 @@
                 <Thickness x:Key="NavigationViewMinimalHeaderMargin">-16,47,-16,0</Thickness>
             </FrameworkElement.Resources>
 
-            <ui:ScrollViewerEx
-                Margin="0,15,0,0"
-                CanContentScroll="True">
-                <ui:Frame x:Name="Frame_Main"
-                          Margin="57,0,57,0"
-                          MaxWidth="1050"/>
-            </ui:ScrollViewerEx>
+            <ui:Frame x:Name="Frame_Main"
+                      Margin="57,15,57,0"
+                      MaxWidth="1050"/>
         </ui:NavigationView>
     </Grid>
 </ui:Page>

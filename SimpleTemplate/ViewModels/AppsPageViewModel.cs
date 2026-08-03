@@ -20,19 +20,18 @@ namespace SimpleTemplate.ViewModels
 
         private void GenerateButtons()
         {
-            for (int i = 0; i < 256; i++)
+            for (int i = 0; i < 2048; i++)
             {
-                var random = new Random();
-                ButtonSource.Add(
-                    new SolidColorBrush(
-                        Color.FromArgb(
-                            (byte)200,
-                            (byte)random.Next(0, 250),
-                            (byte)random.Next(0, 250),
-                            (byte)random.Next(0, 250)
-                            )
+                var brush = new SolidColorBrush(
+                    Color.FromArgb(
+                        (byte)200,
+                        (byte)Random.Shared.Next(0, 250),
+                        (byte)Random.Shared.Next(0, 250),
+                        (byte)Random.Shared.Next(0, 250)
                         )
                     );
+                brush.Freeze();
+                ButtonSource.Add(brush);
             }
         }
     }

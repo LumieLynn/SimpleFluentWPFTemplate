@@ -9,7 +9,7 @@ using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 namespace SimpleTemplate.Views
 {
     /// <summary>
-    /// NavigationRootView.xaml 的交互逻辑
+    /// Interaction logic for NavigationRootView.xaml
     /// </summary>
     public partial class NavigationRootView : Page
     {

@@ -3,7 +3,7 @@
 namespace SimpleTemplate.Views
 {
     /// <summary>
-    /// AboutPageView.xaml 的交互逻辑
+    /// Interaction logic for AboutPageView.xaml
     /// </summary>
     public partial class AboutPageView : Page
     {
