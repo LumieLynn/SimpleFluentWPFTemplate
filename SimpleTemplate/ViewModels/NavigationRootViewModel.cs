@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.Infrastructure;
@@ -11,7 +11,6 @@ namespace SimpleTemplate.ViewModels
     [RegisterView(typeof(NavigationRootView), viewLifetime: ServiceLifetime.Singleton, viewModelLifetime: ServiceLifetime.Singleton)]
     public partial class NavigationRootViewModel : ObservableRecipient
     {
-        private readonly SynchronizationContext? _syncContext = SynchronizationContext.Current;
         private readonly INavigationService _navigationService;
         private readonly IMenuConfigurationService _menuConfigurationService;
 
@@ -36,8 +35,6 @@ namespace SimpleTemplate.ViewModels
         [ObservableProperty]
         private object? header;
 
-        public event Action? MenuLoaded;
-
         public NavigationRootViewModel(
             INavigationService navigationService,
             IMenuConfigurationService menuConfigurationService)
@@ -45,30 +42,21 @@ namespace SimpleTemplate.ViewModels
             _navigationService = navigationService;
             _navigationService.Navigated += OnNavigated;
             _menuConfigurationService = menuConfigurationService;
-
         }
 
-        public async Task InitializeAsync()
+        /// <summary>
+        /// Loads the menu configuration. Called once by the shell view when it loads.
+        /// </summary>
+        public void Initialize()
         {
-            await LoadMenuConfigurationsAsync();
-        }
-
-        private async Task LoadMenuConfigurationsAsync()
-        {
-            var (main, footer) = await _menuConfigurationService.GetMenuConfigAsync();
-
-            _syncContext?.Post(_ =>
-            {
-                MenuConfigs = new ObservableCollection<MenuConfigItem>(main);
-                FooterConfigs = new ObservableCollection<MenuConfigItem>(footer);
-                MenuLoaded?.Invoke();
-            }, null);
+            var (main, footer) = _menuConfigurationService.GetMenuConfig();
+            MenuConfigs = new ObservableCollection<MenuConfigItem>(main);
+            FooterConfigs = new ObservableCollection<MenuConfigItem>(footer);
         }
 
         private void OnNavigated(object? sender, EventArgs e)
         {
             IsBackEnabled = _navigationService.CanGoBack;
         }
-
     }
 }

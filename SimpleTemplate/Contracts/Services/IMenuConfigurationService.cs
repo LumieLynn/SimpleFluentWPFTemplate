@@ -1,9 +1,12 @@
-﻿using SimpleTemplate.Models;
+using SimpleTemplate.Models;
 
 namespace SimpleTemplate.Contracts.Services
 {
+    /// <summary>
+    /// Provides the navigation menu configuration consumed by the shell view.
+    /// </summary>
     public interface IMenuConfigurationService
     {
-        Task<(IEnumerable<MenuConfigItem> Main, IEnumerable<MenuConfigItem> Footer)> GetMenuConfigAsync();
+        (IEnumerable<MenuConfigItem> Main, IEnumerable<MenuConfigItem> Footer) GetMenuConfig();
     }
 }

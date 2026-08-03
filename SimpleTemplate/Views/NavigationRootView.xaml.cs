@@ -1,5 +1,6 @@
 ﻿using iNKORE.UI.WPF.Modern.Common.IconKeys;
 using iNKORE.UI.WPF.Modern.Controls;
+using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.Models;
 using SimpleTemplate.ViewModels;
 using System.Collections;
@@ -13,36 +14,46 @@ namespace SimpleTemplate.Views
     /// </summary>
     public partial class NavigationRootView : Page
     {
-        public NavigationRootView(NavigationRootViewModel viewModel)
+        private readonly INavigationService _navService;
+        private readonly INavigationViewService _navViewService;
+
+        public NavigationRootView(
+            NavigationRootViewModel viewModel,
+            INavigationService navService,
+            INavigationViewService navViewService)
         {
+            _navService = navService;
+            _navViewService = navViewService;
+
             InitializeComponent();
             DataContext = viewModel;
             Loaded += OnLoaded;
         }
+
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (DataContext is NavigationRootViewModel vm)
+            if (DataContext is not NavigationRootViewModel vm)
             {
-                vm.MenuLoaded += () =>
-                {
-                    BuildNavigationMenu(vm.MenuConfigs, NavigationViewControl.MenuItems);
-                    BuildNavigationMenu(vm.FooterConfigs, NavigationViewControl.FooterMenuItems);
-                };
-
-                if (vm.MenuConfigs.Count > 0)
-                {
-                    BuildNavigationMenu(vm.MenuConfigs, NavigationViewControl.MenuItems);
-                    BuildNavigationMenu(vm.FooterConfigs, NavigationViewControl.FooterMenuItems);
-                }
-
-                NavigationViewControl.SelectionChanged += (s, args) =>
-                {
-                    if (args.SelectedItem is NavigationViewItem selectedItem)
-                    {
-                        vm.Header = selectedItem.Content?.ToString();
-                    }
-                };
+                return;
             }
+
+            vm.Initialize();
+            BuildNavigationMenu(vm.MenuConfigs, NavigationViewControl.MenuItems);
+            BuildNavigationMenu(vm.FooterConfigs, NavigationViewControl.FooterMenuItems);
+
+            _navViewService.Initialize(NavigationViewControl);
+
+            Dispatcher.BeginInvoke(
+                () => _navService.Initialize(Frame_Main, typeof(HomePageViewModel).FullName),
+                System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            NavigationViewControl.SelectionChanged += (s, args) =>
+            {
+                if (args.SelectedItem is NavigationViewItem selectedItem)
+                {
+                    vm.Header = selectedItem.Content?.ToString();
+                }
+            };
         }
 
         private void BuildNavigationMenu(IEnumerable<MenuConfigItem> configs, IList targetCollection)

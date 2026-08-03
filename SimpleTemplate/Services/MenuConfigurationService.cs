@@ -1,14 +1,13 @@
-﻿using SimpleTemplate.Contracts.Services;
+using SimpleTemplate.Contracts.Services;
 using SimpleTemplate.Models;
 
 namespace SimpleTemplate.Services
 {
     public class MenuConfigurationService(IMenuDefinition menuDefinition) : IMenuConfigurationService
     {
-        public Task<(IEnumerable<MenuConfigItem> Main, IEnumerable<MenuConfigItem> Footer)> GetMenuConfigAsync()
+        public (IEnumerable<MenuConfigItem> Main, IEnumerable<MenuConfigItem> Footer) GetMenuConfig()
         {
-            var (main, footer) = menuDefinition.Build();
-            return Task.FromResult((main, footer));
+            return menuDefinition.Build();
         }
     }
 }
