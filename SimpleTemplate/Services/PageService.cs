@@ -1,29 +1,21 @@
-﻿using SimpleTemplate.Contracts.Services;
+using SimpleTemplate.Contracts.Services;
 
 namespace SimpleTemplate.Services
 {
     public class PageService : IPageService
     {
-        private readonly Dictionary<string, (Type VmType, Type ViewType)> _pages = new();
+        private readonly Dictionary<Type, Type> _views = new();
 
-        public Type GetPageType(string key)
+        public Type GetViewType(Type viewModelType)
         {
-            if (!_pages.TryGetValue(key, out var mapping))
-                throw new InvalidOperationException($"Page with key '{key}' not found.");
-            return mapping.VmType;
+            if (!_views.TryGetValue(viewModelType, out var viewType))
+                throw new InvalidOperationException($"No view is registered for ViewModel '{viewModelType.Name}'.");
+            return viewType;
         }
 
-        public Type GetViewType(string key)
+        public void ConfigurePage(Type viewModelType, Type viewType)
         {
-            if (!_pages.TryGetValue(key, out var mapping))
-                throw new InvalidOperationException($"Page with key '{key}' not found.");
-            return mapping.ViewType;
+            _views.TryAdd(viewModelType, viewType);
         }
-
-        public void ConfigurePage(string key, Type vmType, Type viewType)
-        {
-            _pages.TryAdd(key, (vmType, viewType));
-        }
-
     }
 }

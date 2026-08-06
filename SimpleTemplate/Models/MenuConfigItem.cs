@@ -14,7 +14,7 @@
 
         public string? Icon { get; set; }
 
-        public string? TargetPage { get; set; }
+        public Type? TargetPage { get; set; }
 
         public bool IsExpanded { get; set; }
         public bool? IsSelectable { get; set; }

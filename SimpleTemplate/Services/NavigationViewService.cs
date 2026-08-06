@@ -23,14 +23,14 @@ namespace SimpleTemplate.Services
         {
             if (args.IsSettingsInvoked)
             {
-                navigationService.NavigateTo(typeof(SettingsPageViewModel).FullName);
+                navigationService.NavigateTo(typeof(SettingsPageViewModel));
                 return;
             }
 
             var item = args.InvokedItemContainer as NavigationViewItem;
-            if (item?.Tag is string pageKey)
+            if (item?.Tag is Type pageType)
             {
-                navigationService.NavigateTo(pageKey);
+                navigationService.NavigateTo(pageType);
             }
         }
 
@@ -39,7 +39,7 @@ namespace SimpleTemplate.Services
         {
             if (_navigationView == null) return;
 
-            var currentVmType = navigationService.GetCurrentViewModel()?.GetType().FullName;
+            var currentVmType = navigationService.GetCurrentViewModel()?.GetType();
             if (currentVmType == null) return;
 
             _navigationView.Dispatcher.InvokeAsync(() =>
@@ -58,20 +58,20 @@ namespace SimpleTemplate.Services
             }, System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
-        private NavigationViewItem? GetSelectedItem(System.Collections.IList items, string targetPageKey)
+        private NavigationViewItem? GetSelectedItem(System.Collections.IList items, Type targetPageType)
         {
             foreach (var item in items)
             {
                 if (item is NavigationViewItem navItem)
                 {
-                    if (navItem.Tag is string tag && tag == targetPageKey)
+                    if (navItem.Tag is Type tag && tag == targetPageType)
                     {
                         return navItem;
                     }
 
                     if (navItem.MenuItemsSource is System.Collections.IList children)
                     {
-                        var childMatch = GetSelectedItem(children, targetPageKey);
+                        var childMatch = GetSelectedItem(children, targetPageType);
                         if (childMatch != null)
                         {
                             return childMatch;

@@ -13,7 +13,7 @@ namespace SimpleTemplate.Infrastructure
                 Type = MenuItemType.Item,
                 Title = title,
                 Icon = icon,
-                TargetPage = viewModelType.FullName,
+                TargetPage = viewModelType,
                 IsSelectable = isSelectable
             });
             return this;

@@ -1,4 +1,4 @@
-﻿using iNKORE.UI.WPF.Modern.Controls;
+using iNKORE.UI.WPF.Modern.Controls;
 
 namespace SimpleTemplate.Contracts.Services
 {
@@ -6,14 +6,14 @@ namespace SimpleTemplate.Contracts.Services
     {
         event EventHandler Navigated;
 
-        void Initialize(Frame frame, string? pageKey);
+        void Initialize(Frame frame, Type? pageType);
 
         bool CanGoBack
         {
             get;
         }
 
-        bool NavigateTo(string pageKey, object? parameters = null);
+        bool NavigateTo(Type pageType, object? parameter = null);
 
         bool GoBack();
 

@@ -11,7 +11,7 @@ namespace SimpleTemplate.Infrastructure
         {
             var allTypes = Assembly.GetExecutingAssembly().GetTypes();
 
-            var pageMappings = new List<(string VmFullName, Type VmType, Type ViewType)>();
+            var pageMappings = new List<(Type VmType, Type ViewType)>();
 
             foreach (var type in allTypes)
             {
@@ -27,10 +27,7 @@ namespace SimpleTemplate.Infrastructure
                         registerAttr.ViewType,
                         registerAttr.ViewLifetime));
 
-                    if (!string.IsNullOrEmpty(type.FullName))
-                    {
-                        pageMappings.Add((type.FullName, type, registerAttr.ViewType));
-                    }
+                    pageMappings.Add((type, registerAttr.ViewType));
                 }
             }
 
@@ -39,7 +36,7 @@ namespace SimpleTemplate.Infrastructure
                 var pageService = new PageService();
                 foreach (var mapping in pageMappings)
                 {
-                    pageService.ConfigurePage(mapping.VmFullName, mapping.VmType, mapping.ViewType);
+                    pageService.ConfigurePage(mapping.VmType, mapping.ViewType);
                 }
                 return pageService;
             });

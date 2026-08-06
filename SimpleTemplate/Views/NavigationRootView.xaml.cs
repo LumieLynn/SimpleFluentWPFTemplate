@@ -44,7 +44,7 @@ namespace SimpleTemplate.Views
             _navViewService.Initialize(NavigationViewControl);
 
             Dispatcher.BeginInvoke(
-                () => _navService.Initialize(Frame_Main, typeof(HomePageViewModel).FullName),
+                () => _navService.Initialize(Frame_Main, typeof(HomePageViewModel)),
                 System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
             NavigationViewControl.SelectionChanged += (s, args) =>
@@ -71,12 +71,12 @@ namespace SimpleTemplate.Views
             if (config.Type == MenuItemType.Header) return new NavigationViewItemHeader { Content = config.Title };
 
             bool hasChildren = config.Children != null && config.Children.Count > 0;
-            bool defaultSelectable = !hasChildren && !string.IsNullOrEmpty(config.TargetPage);
+            bool defaultSelectable = !hasChildren && config.TargetPage != null;
 
             var item = new NavigationViewItem
             {
                 Content = config.Title,
-                Tag = config.TargetPage, // save PageKey to Tag
+                Tag = config.TargetPage, // save the target ViewModel type to Tag
                 IsExpanded = config.IsExpanded,
                 SelectsOnInvoked = config.IsSelectable ?? defaultSelectable
             };

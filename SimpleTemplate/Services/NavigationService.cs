@@ -14,7 +14,7 @@ namespace SimpleTemplate.Services
 
         public event EventHandler? Navigated;
 
-        public void Initialize(Frame frame, string? pageKey = null)
+        public void Initialize(Frame frame, Type? pageType = null)
         {
             if (_frame != null)
             {
@@ -25,9 +25,9 @@ namespace SimpleTemplate.Services
             frame.Navigating += OnFrameNavigating;
             frame.Navigated += OnFrameNavigated;
 
-            if (pageKey != null)
+            if (pageType != null)
             {
-                NavigateTo(pageKey);
+                NavigateTo(pageType);
             }
         }
 
@@ -56,21 +56,20 @@ namespace SimpleTemplate.Services
             return true;
         }
 
-        public bool NavigateTo(string pageKey, object? parameter = null)
+        public bool NavigateTo(Type pageType, object? parameter = null)
         {
             if (_frame == null)
             {
                 return false;
             }
 
-            var viewModelType = pageService.GetPageType(pageKey);
-            if (viewModelType == GetCurrentViewModel()?.GetType())
+            if (pageType == GetCurrentViewModel()?.GetType())
             {
                 // Already on this page - no-op, avoids duplicate journal entries.
                 return true;
             }
 
-            var viewType = pageService.GetViewType(pageKey);
+            var viewType = pageService.GetViewType(pageType);
             var page = viewFactory.CreateView(viewType);
             if (page == null)
             {
@@ -81,7 +80,7 @@ namespace SimpleTemplate.Services
                     $"Is its base class iNKORE.UI.WPF.Modern.Controls.Page?");
             }
 
-            var viewModel = viewFactory.CreateViewModel(viewModelType);
+            var viewModel = viewFactory.CreateViewModel(pageType);
             page.DataContext = viewModel;
             _pendingParameter = parameter;
 
